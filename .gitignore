@@ -1,0 +1,5 @@
+# References
+references/*
+!references/README.md
+!_docs
+
