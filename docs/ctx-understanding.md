@@ -68,30 +68,38 @@ ctx
 Skill 本身和缓存数据分开：
 
 ```text
-.agents/
-├── skills/ctx/       # ctx skill 的规则、参考文档和维护脚本
-└── context/          # 项目级 AI 上下文缓存
+skills/               # 英文正典技能
+├── ctx/
+│   ├── SKILL.md      # 五操作工作流规则（Agent 读取入口）
+│   ├── references/   # 缓存契约参考文档
+│   └── scripts/      # init / doctor 维护脚本
+skills-zh/            # 中文镜像技能，与 skills/ 同步维护
+├── ctx/
+│   ├── SKILL.zh.md   # 中文版文件统一带 .zh.md 后缀
+│   └── references/
+│       └── *.zh.md
+.agents/context/      # 项目级 AI 上下文缓存（数据）
 ```
+
+技能与缓存数据分离：`skills/`、`skills-zh/` 是规则本体；`.agents/context/` 只是数据。中英两份技能内容等价，英文正典优先，修改任一侧后先同步另一侧再继续；中文镜像的每个文件都以 `.zh.md` 后缀结尾以作区分；脚本只存在于 `skills/ctx/scripts/`（无需翻译）。
 
 `.agents/context/` 中保存的是项目持久化记忆，原则上应当纳入版本控制，而不是当作临时文件处理。
 
-## 4. 目录分类方式
+## 4. 存储单位与分类标签
 
-上下文缓存不按照年份或月份建立目录，而是按照记录所对应的需求或决策类型分类。
+上下文缓存的存储单位是会话，而不是单个任务。一次压缩产生一个会话缓存文档，同一会话的后续压缩写回同一个文档。一个会话中同时包含 feature 和 bug-fix 工作时，不需要拆分存储——分类只作为元数据出现在同一份文档中。
+
+`.agents/context/` 采用扁平布局，不建立任何分类子目录：
 
 ```text
 .agents/context/
-├── index.md
-├── feature/
-├── bug-fix/
-├── architecture/
-├── process/
-├── simplification/
-├── testing/
-└── archive/
+├── index.md                   # 根索引，唯一常规导航入口
+├── YYYY-MM-DD-HHMM-<slug>.md  # 平铺的会话缓存文档（三件套）
+└── archive/                   # 唯一子目录，存放被取代或已归档的记录
+    └── index.md
 ```
 
-分类集合借鉴 DeepSeek Harness 的 Agent Notes：
+分类借鉴 DeepSeek Harness 的 Agent Notes，保留为受控标签集，通过 YAML front matter 的 `tags` 字段表达，例如 `tags: [feature, bug-fix]`；正文章节保持全局组织，不按分类拆分小节；根索引摘要行同样携带 tags。没有合适的标签时可以留空。
 
 | 分类 | 含义 |
 |---|---|
@@ -102,7 +110,9 @@ Skill 本身和缓存数据分开：
 | `simplification` | 有意减少代码、行为或表面复杂度 |
 | `testing` | 保存测试基础设施、测试策略和验证设计 |
 
-每条缓存记录只有一个主分类。若记录涉及多个领域，应选择最主要的分类，并通过交叉链接或标签关联其他领域，而不是复制同一文件。
+### 为什么不以任务为单位拆分
+
+按任务拆分会把一次会话切碎到多个文件：问题和上下文需要在多个分类文件间复制或互相引用，恢复时要先拼图，还需要同时维护会话视图和分类视图两套索引。以会话为单位后，"这次会话做了哪些事"由一份文档直接回答，"来自同一任务的历史演进"由 `Thread:` 和 `Prev:` 链回答。
 
 ### 为什么不按日期分目录
 
@@ -110,10 +120,9 @@ Skill 本身和缓存数据分开：
 
 这样可以同时满足：
 
-- 通过目录按语义寻找历史，例如快速查看所有 bug-fix；
 - 通过文件名前缀保持时间顺序；
-- 避免同时维护日期目录和需求类型目录两套层级；
-- 让未来 Agent 更容易根据当前问题找到相关历史。
+- 避免同时维护日期目录和语义目录两套层级；
+- 让未来 Agent 从根索引即可直达具体会话文档。
 
 ## 5. 文件命名
 
@@ -156,37 +165,29 @@ YYYY-MM-DD-HHMM-<kebab-slug>.md
 
 根索引至少需要包含：
 
-1. 各需求类型索引的链接；
-2. 当前活动线程及其 head；
-3. 未解决和延期的用户要求；
-4. 活动缓存记录；
-5. 被取代和已归档记录；
-6. 每个缓存文件解决了什么问题的摘要。
+1. 当前活动线程及其 head；
+2. 每个活动缓存文件的一行摘要（含 tags）；
+3. 归档索引的链接。
 
-### 6.2 分类索引
+### 6.2 归档索引
 
-每个需求类型目录也有一个 `index.md`：
+archive/ 目录维护自己的 `index.md`：
 
 ```text
-.agents/context/feature/index.md
-.agents/context/bug-fix/index.md
-.agents/context/architecture/index.md
-.agents/context/process/index.md
-.agents/context/simplification/index.md
-.agents/context/testing/index.md
+.agents/context/archive/index.md
 ```
 
-分类索引只列出该分类下的记录，用于在根索引筛选出候选范围后进一步缩小读取范围。
+被取代或归档的记录从根索引移除，只在归档索引中保留一行条目，供追溯决策演变时查找。
 
-### 6.3 不设置月度索引
+### 6.3 不设置其他中间索引
 
-最初按日期分目录时，可以考虑“根索引 + 每月索引”。但当前已经改为按需求类型分类，因此不再单独维护月度索引：
+不存在分类索引或月度索引，导航层级固定为：
 
 ```text
-根索引 → 分类索引 → 具体缓存文件
+根索引 → 会话缓存文件 → 必要时沿 Prev 读取历史
 ```
 
-日期由文件名负责，语义由目录负责，避免两个维度重复维护。
+日期由文件名负责，语义由 front matter 的 tags 负责，避免多个维度重复维护。
 
 ## 7. Index 中必须记录的内容
 
@@ -195,14 +196,10 @@ Index 中每个缓存文件的记录不能只写标题和链接，而应该回�
 | 字段 | 要回答的问题 |
 |---|---|
 | Problem | 这条记录解决了什么问题？ |
-| User requirements | 用户提出了哪些要求？ |
-| Resolved | 哪些要求已经解决？ |
-| Unresolved / deferred | 哪些要求仍未解决、被延期或受阻？ |
 | Decision / changes | 做了什么决策，修改了什么？ |
 | Consequences | 产生了哪些收益、代价和取舍？ |
 | Verification | 如何验证，结果是什么？ |
-| Status / head | 这条记录是否仍然是活动 head？ |
-| Next | 未来 Agent 的第一步是什么？ |
+| Tags | 会话涉及哪些分类（feature、bug-fix 等）？ |
 
 根索引中的内容应当保持紧凑，使用一行或几行摘要；详细理由、完整文件列表和验证输出放在对应的缓存文件中。
 
@@ -210,58 +207,54 @@ Index 中每个缓存文件的记录不能只写标题和链接，而应该回�
 
 ## 8. 完整缓存文件格式
 
-每个英文缓存文件都应当是一个结构化检查点，至少包含以下内容：
+缓存文件应当短而实，类似 DeepSeek Harness Agent Notes 的密度：头部用 YAML front matter 承载机器可读元数据，正文只保留几个必要小节：
 
 ```markdown
-# Context Checkpoint: <title>
+---
+created: YYYY-MM-DD HH:MM <timezone>
+updated: YYYY-MM-DD HH:MM <timezone>
+tags: []                      # 受控标签集，可组合，可为空
+status: active                # active | superseded | archived
+thread: <stable-thread-slug>
+prev: null                    # 上一个线程 head 的路径，无则为 null
+head: true
+next: <one-line-next-action>  # 可选，一行说明下一步做什么
+---
 
-- Created: YYYY-MM-DD HH:MM <timezone>
-- Updated: YYYY-MM-DD HH:MM <timezone>
-- Classification: feature | bug-fix | architecture | process | simplification | testing
-- Status: active | superseded | archived
-- Thread: <stable-thread-slug>
-- Prev: <previous-record-or-none>
-- Head: true | false
+# Context Checkpoint: <title>
 
 ## Problem
 
-## Goal
+问题和目标，两三句话说清楚。
 
-## User Requirements
+## Requirements
 
 | ID | Requirement | Status | Evidence |
 |---|---|---|---|
 
-## Key Technical Context
-
 ## Decision
 
-## Changes
-
-### Created
-
-### Modified
-
-### Read / Relevant
-
-### Deleted
+做了什么决策、为什么选择它，以及修改了哪些文件和行为（列出关键路径即可，不区分 created/modified/deleted 子清单）。
 
 ## Consequences
 
-### Benefits
-
-### Costs and Trade-offs
+收益、代价和取舍，几行即可。
 
 ## Verification
 
-## Current Status
-
-## Next Steps
-
-## Critical Context
+如何验证，结果是什么。
 
 ## Update Log
+
+- YYYY-MM-DD HH:MM：追加了什么变化。
 ```
+
+写作规则：
+
+- 正文目标是几十行讲完一次压缩，不是复刻会话全文；
+- 有内容才写小节，没有就省略，不留空壳；
+- 关键技术上下文只在确实影响理解时写入 Problem 或 Decision，不设独立章节；
+- 不要为了填模板而展开无信息量的段落。
 
 ### 需求状态
 
@@ -285,34 +278,32 @@ Index 中每个缓存文件的记录不能只写标题和链接，而应该回�
 
 ## 9. 同一会话的多次压缩
 
-同一个会话或同一个工作线程可以多次创建上下文缓存，但必须由不同操作明确区分“新增”和“追加”。
+同一个会话可以多次压缩：第一次用 `ctx-create` 开启会话缓存文档，之后每次都用 `ctx-append` 写回同一个文档。两者必须明确区分，不能混用。
 
-### `ctx-save`：新增缓存
+### `ctx-create`：开启新会话缓存
 
-`ctx-save` 创建新的缓存文件：
+`ctx-create` 创建新的会话缓存文档：
 
 1. 读取根索引；
-2. 确定线程和主分类；
-3. 创建新的日期时间前缀文件；
-4. 用 `Prev:` 链接上一个线程 head；
-5. 创建英文文件、中文镜像和 `.i18n.yaml`；
-6. 更新分类索引和根索引；
-7. 将新文件设置为当前 head。
+2. 确定线程 slug 和初始 tags；
+3. 创建新的日期时间前缀文件及中文镜像、`.i18n.yaml`；
+4. 在 front matter 中用 `prev:` 链接上一个线程 head；
+5. 在根索引追加一行摘要，并将新文件设置为当前 head。
 
-旧记录不能直接删除。只有在新记录完整承接旧记录的有效事实后，旧记录才可以标记为 `superseded`，之后仍然保留链接。
+旧记录不能直接删除。只有在新记录完整承接旧记录的有效事实后，旧记录才可以把 `status` 标记为 `superseded`，之后仍然保留链接。
 
-### `ctx-update`：追加到已有缓存
+### `ctx-append`：续写当前会话缓存
 
-`ctx-update` 不创建新的缓存文件，而是更新现有线程 head：
+`ctx-append` 不创建新的缓存文件，而是更新当前会话文档：
 
-1. 读取根索引并定位准确的 head；
-2. 保持文件名和 `Created` 不变；
-3. 更新 `Updated`；
-4. 合并 Problem、User Requirements、Decision、Changes、Verification 等当前章节；
+1. 读取根索引并定位当前线程 head；
+2. 保持文件名和 `created` 不变；
+3. 更新 `updated`，可按需补充 `tags`；
+4. 合并 Problem、Requirements、Decision、Consequences、Verification 等实际存在的章节；
 5. 在 `Update Log` 中追加本次变化；
-6. 同步中文镜像、`.i18n.yaml`、分类索引和根索引。
+6. 同步中文镜像、`.i18n.yaml` 和根索引摘要。
 
-`ctx-update` 是“结构化合并 + 追加更新日志”，不是把第二份完整摘要随意粘到文件末尾。
+`ctx-append` 是“结构化合并 + 追加更新日志”，不是把第二份完整摘要随意粘到文件末尾。
 
 如果用户只说“保存一下”，无法判断是新增还是追加，应先询问用户，而不是由 AI 默默选择。
 
@@ -338,9 +329,8 @@ AI 默认恢复路径只读取英文：
 
 ```text
 .agents/context/index.md
-→ 相关分类 index.md
 → 选中的英文缓存文件
-→ 必要时沿 Prev 读取历史
+→ 必要时沿 prev 读取历史
 ```
 
 ## 11. 渐进式披露
@@ -350,8 +340,8 @@ AI 默认恢复路径只读取英文：
 | 层级 | 内容 | 默认行为 |
 |---|---|---|
 | L1 | 根 `index.md` | 每次恢复上下文时首先读取 |
-| L2 | 分类 `index.md` 与索引摘要 | 只有需要缩小候选范围时读取 |
-| L3 | 完整英文缓存文件 | 只读取与当前任务相关的记录 |
+| L2 | 完整英文会话缓存文件 | 只读取与当前任务相关的记录 |
+| L3 | `prev:` 历史记录与归档索引 | 仅当前记录缺少事实或需追溯演变时读取 |
 
 历史前置记录只有在以下情况下才继续读取：
 
@@ -368,8 +358,8 @@ AI 默认恢复路径只读取英文：
 | 操作 | 含义 |
 |---|---|
 | `ctx` | 查看缓存状态和根索引摘要 |
-| `ctx-save` | 新增缓存文件 |
-| `ctx-update` | 追加到已有缓存文件 |
+| `ctx-create` | 开启新的会话缓存文档 |
+| `ctx-append` | 续写当前会话缓存文档 |
 | `ctx-resume` | 从缓存恢复此前工作 |
 | `ctx-archive` | 归档被取代的完整记录 |
 
@@ -377,8 +367,8 @@ AI 默认恢复路径只读取英文：
 
 ```text
 /ctx
-/ctx-save
-/ctx-update
+/ctx-create
+/ctx-append
 /ctx-resume
 /ctx-archive
 ```
@@ -404,10 +394,10 @@ AI 默认恢复路径只读取英文：
 当前阶段只需要确定并实现：
 
 - `ctx` skill 的核心工作流；
-- `.agents/context/` 的缓存布局；
-- 根索引和分类索引；
-- 结构化检查点格式；
-- `ctx-save`、`ctx-update`、`ctx-resume` 等操作规则；
+- `.agents/context/` 的扁平缓存布局；
+- 根索引和归档索引；
+- 带 front matter 的结构化检查点格式；
+- `ctx-create`、`ctx-append`、`ctx-resume` 等操作规则；
 - 英文正典、中文镜像和 `.i18n.yaml` 凭据；
 - 必要的确定性维护与验证脚本。
 
@@ -416,8 +406,8 @@ AI 默认恢复路径只读取英文：
 - 各 AI Agent CLI 的具体插件、hook 或 slash command；
 - 针对某一个 Agent 的专属上下文注入逻辑；
 - 替代 Pi、DeepSeek Harness 等运行时自身的原生 token compaction；
-- 自动猜测用户意图、自动选择 `ctx-save` 或 `ctx-update`。
+- 自动猜测用户意图、自动选择 `ctx-create` 或 `ctx-append`。
 
 ## 15. 一句话总结
 
-> `ctx` 按需求类型组织上下文历史，按文件名保留时间顺序；根索引和分类索引负责渐进式导航，完整双语检查点负责保存用户要求、问题、决策、修改、后果和验证证据，使未来的 AI 能够在不读取全部历史的情况下准确继续工作。
+> `ctx` 以会话为单位组织并平铺存放上下文历史，按文件名保留时间顺序，用 front matter 标签表达需求类型；根索引负责一行式渐进导航，完整双语检查点负责保存用户要求、问题、决策、修改、后果和验证证据，使未来的 AI 能够在不读取全部历史的情况下准确继续工作。
