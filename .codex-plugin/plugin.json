@@ -1,0 +1,19 @@
+{
+  "name": "ctx",
+  "version": "0.1.0",
+  "description": "Session context compression & cache: decision-oriented checkpoints for AI coding agents.",
+  "homepage": "https://github.com/xypur/ctx",
+  "repository": "https://github.com/xypur/ctx",
+  "keywords": ["context", "memory", "agent-skills", "productivity"],
+  "skills": "./skills/",
+  "hooks": "./hooks/claude-codex-hooks.json",
+  "interface": {
+    "displayName": "ctx",
+    "shortDescription": "Session context compression & cache",
+    "longDescription": "Compresses AI sessions into decision-oriented checkpoints under .agents/context and restores them via progressive disclosure. Five operations: ctx, ctx-create, ctx-append, ctx-resume, ctx-archive.",
+    "developerName": "xypur",
+    "category": "Productivity",
+    "capabilities": ["Instructions", "Lifecycle hooks"],
+    "websiteURL": "https://github.com/xypur/ctx"
+  }
+}

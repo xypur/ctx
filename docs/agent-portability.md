@@ -15,13 +15,14 @@ ctx 的适配层遵循单一原则（借鉴 ponytail 的 Adapter Rule）：
 | 通用（支持 Agent Skills 的宿主：Claude Code / pi / OpenCode / Codex 等） | `skills/ctx/` | skill | 将 `skills/ctx/` 放入宿主技能发现路径，或直接读取 `skills/ctx/SKILL.md` | 无（自然语言触发） |
 | pi | `package.json`（`@xypur/ctx`）、`hooks/ctx-hint.js`、`pi-extension/index.js` | package + extension | `pi install git:github.com/xypur/ctx`（或本地路径） | 有（notify 提醒 + 首轮注入一次） |
 | OpenCode | `.opencode/command/ctx*.md`（5 文件） | command（零 JS） | 将 5 文件复制进项目 `.opencode/command/` 或全局命令目录 | 无（零运行时） |
+| Codex | `.codex-plugin/plugin.json`、`commands/ctx*.toml`、`hooks/claude-codex-hooks.json` | plugin | 以 Codex 插件安装本仓库（skills + 五命令 + SessionStart hook） | 有（SessionStart hook，JSON 形态） |
+| Claude Code | `.claude-plugin/plugin.json` + `marketplace.json`、`commands/ctx*.md`、`hooks/claude-codex-hooks.json` | plugin | `/plugin marketplace add xypur/ctx` → `/plugin install ctx@ctx` | 有（SessionStart hook，纯文本 stdout） |
 
-## 规划中（落地后迁入上表）
+## 规划中
 
-| 优先级 | 宿主 | 计划文件 | 层级 | 规格模块 |
-|--------|------|----------|------|----------|
-| P2 | Codex | `.codex-plugin/plugin.json`、`commands/ctx*.toml` | plugin | plugin-claude-codex |
-| P2 | Claude Code | `.claude-plugin/plugin.json` + `marketplace.json`、`hooks/ctx-activate.js`、`commands/ctx*.md` | plugin | plugin-claude-codex |
+当前无未落地的规划项。P1/P2 四项适配（pi、OpenCode、Codex、Claude Code）均已迁入上表；
+instruction-tier 规则副本（Cursor / Windsurf / Cline / Kiro）经用户裁剪不做（P3），
+此类宿主以根 `AGENTS.md` 的 resume 指针覆盖。
 
 ## 设计边界
 

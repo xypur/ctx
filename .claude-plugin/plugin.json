@@ -1,0 +1,10 @@
+{
+  "name": "ctx",
+  "version": "0.1.0",
+  "description": "Session context compression & cache: decision-oriented checkpoints for AI coding agents.",
+  "author": {
+    "name": "xypur",
+    "url": "https://github.com/xypur"
+  },
+  "hooks": "./hooks/claude-codex-hooks.json"
+}

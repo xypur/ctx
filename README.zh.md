@@ -44,10 +44,12 @@ ctx 是纯 Agent Skill——无运行时、零依赖。
 | 任何支持 Agent Skills 的宿主（Claude Code、pi、OpenCode、Codex 等） | 把 `skills/ctx/` 放入宿主的技能发现路径，或直接读取 `skills/ctx/SKILL.md` |
 | pi | `pi install git:github.com/xypur/ctx`（或本地路径）——同时装入技能、`/ctx*` 命令与会话启动缓存提示 |
 | OpenCode | 把 `.opencode/command/ctx*.md`（5 文件）复制进项目的 `.opencode/command/` |
+| Codex | 以 Codex 插件安装本仓库——同时装入技能、五命令与会话启动 hook |
+| Claude Code | `/plugin marketplace add xypur/ctx` → `/plugin install ctx@ctx`——同时装入技能、五命令与会话启动 hook |
 | 任何支持项目指令的宿主 | 在 `AGENTS.md` / `CLAUDE.md` 中加一条 resume 指针——写法见本仓库根 [AGENTS.md](AGENTS.md) |
 
-Codex / Claude Code 插件适配在规划中——
-见 [docs/agent-portability.md](docs/agent-portability.md) 的路线图。
+上表 Codex / Claude Code 行通过插件清单分发——完整适配矩阵见
+[docs/agent-portability.md](docs/agent-portability.md)。
 
 ## 与 ponytail 的关系
 

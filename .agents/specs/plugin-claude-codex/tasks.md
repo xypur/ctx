@@ -8,16 +8,16 @@
 
 ## Phase 1: hook 与命令
 
-- [ ] 6.1 hooks/ctx-activate.js
+- [x] 6.1 hooks/ctx-activate.js
   - 根索引存在性检测、additionalContext 注入、静默降级、零依赖；提示文案 import 自 hooks/ctx-hint.js
   - _Requirements: 2.1, 2.2, 2.3, 2.4, 4.1, 4.2, 4.3_
-- [ ] 6.2 命令五条 × 两宿主形态
+- [x] 6.2 命令五条 × 两宿主形态
   - 薄模板；两形态操作名集合等价
   - _Requirements: 3.1, 3.2, 3.3_
-- [ ] 6.3 插件清单与 marketplace（Codex 先、Claude 后）
+- [x] 6.3 插件清单与 marketplace（Codex 先、Claude 后）
   - .codex-plugin ×1 → .claude-plugin ×2；路径指针齐备
   - _Requirements: 1.1, 1.2, 1.3_
-- [ ] 6.4 Checkpoint — 安装与注入走查
+- [x] 6.4 Checkpoint — 安装与注入走查
   - _Requirements: 1.x, 2.x, 3.x, 4.x_
   - fixture 目录有/无缓存各跑一次 hook，验证注入内容与零副作用；清单字段走查；命令展开语义抽查。结果向用户汇报后再勾选。
 

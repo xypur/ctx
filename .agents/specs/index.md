@@ -4,9 +4,9 @@ Organized by functional module, each module is a self-contained directory (requi
 
 Read this file before any module document: use the Status Bar, Module Status Table, and Task Summary below to determine which module(s) and task(s) the current request touches, then open only the relevant module documents on demand.
 
-> 📍 **Status Bar** · plugin-claude-codex [`implementing`] · 21/26 done · 0 blocked ·
-> Next task: **plugin-claude-codex.6.1**（deps satisfied） · Next gate: **plugin-claude-codex.6.4**
-> Last updated: 2026-08-27（extension-pi-opencode 已实现验收；pi install 实装验证由用户 push 后补做；开始 P2 插件适配）
+> 📍 **Status Bar** · 全模块 [`implemented`] · 26/26 done · 0 blocked ·
+> Next task: none（适配层计划全部完成，待归档确认） · Next gate: none remaining
+> Last updated: 2026-08-27（plugin-claude-codex 6.4 验收完成；适配层三模块 + 前期三模块全部 implemented）
 
 ## Module Status Table
 
@@ -17,7 +17,7 @@ Read this file before any module document: use the Status Bar, Module Status Tab
 | tooling | implemented | 4/4 (100%) | cache-contract | init/doctor 脚本 12 项注入测试全过 |
 | distribution | implemented | 4/4 (100%) | - | P0 分发面完成：AGENTS.md 正典 + 适配矩阵 + README 双语 |
 | extension-pi-opencode | implemented | 5/5 (100%) | distribution | P1 完成：pi 包（@xypur/ctx）与扩展 + OpenCode 零 JS 命令 |
-| plugin-claude-codex | design | 0/4 (0%) | distribution, extension-pi-opencode | P2：插件清单（Codex 先）+ SessionStart hook + 五命令 |
+| plugin-claude-codex | implemented | 4/4 (100%) | distribution, extension-pi-opencode | P2 完成：插件清单（Codex 先）+ SessionStart hook + 五命令 |
 
 `Progress` = `done/total (pct)` counting every task checkbox in `<module>/tasks.md`. Status values: `draft` → `design` → `implementing` → `implemented` → `archived`. Archived modules stay listed with status `archived`; their directories are not moved.
 
@@ -49,10 +49,10 @@ Global index of every task across modules. Add one row per task in `<module>/tas
 | extension-pi-opencode.5.3 | [x] | extension-pi-opencode | pi-extension 命令与启动提示 | extension-pi-opencode.5.1, extension-pi-opencode.5.2 |
 | extension-pi-opencode.5.4 | [x] | extension-pi-opencode | OpenCode 命令文件 | distribution.4.1 |
 | extension-pi-opencode.5.5 | [x] | extension-pi-opencode | Checkpoint — 安装与等价走查 | extension-pi-opencode.5.3, extension-pi-opencode.5.4 |
-| plugin-claude-codex.6.1 | [ ] | plugin-claude-codex | hooks/ctx-activate.js | extension-pi-opencode.5.2 |
-| plugin-claude-codex.6.2 | [ ] | plugin-claude-codex | 命令五条 × 两宿主形态 | distribution.4.1 |
-| plugin-claude-codex.6.3 | [ ] | plugin-claude-codex | 插件清单与 marketplace（Codex 先） | plugin-claude-codex.6.1, plugin-claude-codex.6.2 |
-| plugin-claude-codex.6.4 | [ ] | plugin-claude-codex | Checkpoint — 安装与注入走查 | plugin-claude-codex.6.3 |
+| plugin-claude-codex.6.1 | [x] | plugin-claude-codex | hooks/ctx-activate.js | extension-pi-opencode.5.2 |
+| plugin-claude-codex.6.2 | [x] | plugin-claude-codex | 命令五条 × 两宿主形态 | distribution.4.1 |
+| plugin-claude-codex.6.3 | [x] | plugin-claude-codex | 插件清单与 marketplace（Codex 先） | plugin-claude-codex.6.1, plugin-claude-codex.6.2 |
+| plugin-claude-codex.6.4 | [x] | plugin-claude-codex | Checkpoint — 安装与注入走查 | plugin-claude-codex.6.3 |
 
 `Task` is the globally unique id `<module>.<N.M>` (the module dir name + the task's number in `tasks.md`). `Status` mirrors the `- [ ]` / `- [x]` checkbox in `tasks.md`.
 
