@@ -95,6 +95,24 @@ Each requirement row carries exactly one status:
 
 Never mark work solved merely because a plan was written down.
 
+### Spec-linked sessions
+
+When the project tracks module specs under `.agents/specs/`, the Requirements
+table references those canonical clauses instead of redefining them:
+
+1. `ID` cites the spec clause (e.g. `cache-contract 3.4`); do not paraphrase
+   or restate the requirement text — link to it.
+2. `Evidence` points into the repo: paths under `.agents/specs/`, code paths,
+   or command output.
+3. Statuses still use the honest vocabulary above and must agree with the
+   module's task checkboxes in `.agents/specs/index.md`: mark `solved` only
+   when the implementing tasks are checked there.
+4. Checkpoints record session deltas; they never override spec state. When
+   scope or status legitimately changes, update the spec documents themselves.
+
+Without a specs directory, define lightweight session-local requirement rows
+as usual — nothing else changes.
+
 ### Verification honesty
 
 - `passed` / `failed` only with real command output or review evidence;

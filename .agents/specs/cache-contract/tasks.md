@@ -20,7 +20,7 @@
   - _Requirements: 3.1, 3.2, 3.3, 3.4, 3.5, 4.1, 4.2, 4.3, 4.4_
 
 - [x] 1.4 Checkpoint — 契约审阅
-  - _Requirements: 1.x, 2.x, 3.x, 4.x, 5.x, 6.x, 7.x_
+  - _Requirements: 1.1, 1.2, 1.3, 2.1, 2.2, 2.3, 3.1, 3.2, 3.3, 3.4, 3.5, 4.1, 4.2, 4.3, 4.4, 5.1, 5.2, 5.3, 6.1, 6.2, 7.1, 7.2, 7.3_
   - 对照 docs/ctx-understanding.md 通读三份 reference，逐条核对验收标准；让用户（或第二次独立通读）确认措辞无冲突后勾选，作为下游两模块的放行 gate。
 
 ## Notes
@@ -39,4 +39,4 @@
 }
 ```
 
-Task status is maintained in `.specs/index.md`, which derives progress, the next task, and the next gate from task checkboxes and dependencies. Do not add a module-local status block.
+Task status is maintained in `.agents/specs/index.md`, which derives progress, the next task, and the next gate from task checkboxes and dependencies. Do not add a module-local status block.

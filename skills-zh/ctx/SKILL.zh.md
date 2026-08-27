@@ -54,6 +54,10 @@ description: >-
 
 若当前分钟已存在同名 slug，优先补充有区分度的词汇，而不是立刻跳到 `-02`。
 
+若项目存在 `.agents/specs/` 目录，Requirements 表直接引用其需求条款号
+（如 `cache-contract 3.4`），不要重新定义需求——见 `checkpoint-format.md`
+的“规格联动会话”。
+
 ## ctx-append
 
 通过根索引 Active Threads 定位 head（找不到则报告并建议运行 `ctx`；不得擅自新建）。
@@ -76,6 +80,11 @@ description: >-
 | L3 | `prev:` 祖先链和/或 `archive/index.md` | 仅当 L2 缺事实或需追溯演变 |
 
 默认不读镜像。结束时报告：恢复到的位置、活动线程状态、以及 `next:` 行动项。
+
+若项目同时存在 `.agents/specs/index.md`，在读完根上下文索引后紧接着读它。
+权威分工：`.agents/specs/` 是模块/任务状态的唯一真源（状态栏、下一任务、
+需求条款）；上下文索引是会话记忆的唯一真源。ctx 操作只读取规格状态并引用
+其条款号——绝不编辑规格文档。
 
 ## ctx-archive
 

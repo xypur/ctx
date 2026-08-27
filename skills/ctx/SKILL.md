@@ -67,6 +67,10 @@ Authoritative references (read on demand):
 If the current minute already holds this slug, prefer appending distinctive
 words over jumping to `-02` immediately.
 
+If the project has a `.agents/specs/` directory, reference its requirement
+clause IDs in the Requirements table (e.g. `cache-contract 3.4`) instead of
+redefining requirements — see `checkpoint-format.md` → Spec-linked sessions.
+
 ## ctx-append
 
 Locate head via root index Active Threads (if missing → report, suggest
@@ -94,6 +98,12 @@ Progressive disclosure — read as little as possible:
 
 Mirrors are NOT read by default. Finish by reporting: restored position,
 active thread state, and the `next:` action line.
+
+If the project also has `.agents/specs/index.md`, read it right after the
+root context index. Division of authority: `.agents/specs/` is the single
+source of module/task state (status bar, next task, requirement clauses);
+the context index is the single source of session memory. ctx operations
+read spec state and reference its clause IDs — they never edit spec documents.
 
 ## ctx-archive
 

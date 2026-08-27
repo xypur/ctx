@@ -60,6 +60,7 @@ cache-contract (契约先行)
 
 | Date | Change |
 |------|--------|
-| 2026-08-27 | 初始化 .specs：依据 docs/ctx-understanding.md（会话级存储 + 扁平布局 + front matter tags 决议）拆分为 cache-contract / operations / tooling 三个模块 |
+| 2026-08-27 | 初始化 .agents/specs：依据 docs/ctx-understanding.md（会话级存储 + 扁平布局 + front matter tags 决议）拆分为 cache-contract / operations / tooling 三个模块 |
 | 2026-08-27 | 三模块全部实施完成：references ×3、SKILL.md、init/doctor 脚本；doctor 注入测试 12/12 通过，五操作生命周期走查 doctor 复检 healthy。待用户验收后归档 |
 | 2026-08-27 | skill 迁移至根目录 skills/ctx，新增 skills-zh/ctx 中文镜像（.zh.md 后缀）；examples/ 添加三个可直接通过 doctor 的示例目录 |
+| 2026-08-27 | 规格根目录迁移 `.specs/` → `.agents/specs/`（与 .agents/context、.agents/skills 统一命名空间），通过 validate-specs.js 校验；检查点新增"规格联动会话"引用规则（create 引用规格条款号、resume 分工读取双索引） |
