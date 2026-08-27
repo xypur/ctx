@@ -1,0 +1,27 @@
+{
+  "name": "@xypur/ctx",
+  "version": "0.1.0",
+  "description": "ctx — session context compression & cache: decision-oriented checkpoints for AI coding agents.",
+  "keywords": [
+    "pi-package",
+    "agent-skills",
+    "ctx",
+    "context",
+    "memory"
+  ],
+  "type": "module",
+  "pi": {
+    "extensions": ["./pi-extension/index.js"],
+    "skills": ["./skills"]
+  },
+  "files": [
+    "skills/",
+    "skills-zh/",
+    "pi-extension/",
+    "hooks/",
+    "docs/",
+    "AGENTS.md",
+    "README.md",
+    "README.zh.md"
+  ]
+}

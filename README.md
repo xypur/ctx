@@ -44,10 +44,12 @@ ctx is a plain Agent Skill — no runtime, no dependencies.
 | Host | How |
 |---|---|
 | Any Agent Skills host (Claude Code, pi, OpenCode, Codex, …) | put `skills/ctx/` into your host's skill discovery path, or read `skills/ctx/SKILL.md` directly |
+| pi | `pi install git:github.com/xypur/ctx` (or a local path) — adds the skill, the `/ctx*` commands, and a session-start cache hint |
+| OpenCode | copy `.opencode/command/ctx*.md` (5 files) into your project's `.opencode/command/` |
 | Any host with project instructions | add a resume pointer to your `AGENTS.md` / `CLAUDE.md` — see this repo's root [AGENTS.md](AGENTS.md) for the pattern |
 
-Plugin adapters (pi package, OpenCode commands, Codex / Claude Code plugins)
-are planned — see the roadmap in [docs/agent-portability.md](docs/agent-portability.md).
+Codex / Claude Code plugin adapters are planned — see the roadmap in
+[docs/agent-portability.md](docs/agent-portability.md).
 
 ## Relationship to ponytail
 

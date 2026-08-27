@@ -1,0 +1,5 @@
+---
+description: Show ctx cache status + root index digest
+---
+Read the ctx skill at skills/ctx/SKILL.md and execute its `ctx` operation with: $ARGUMENTS
+If the skill file is not found, report that ctx is not installed here instead of improvising.

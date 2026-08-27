@@ -4,9 +4,9 @@ Organized by functional module, each module is a self-contained directory (requi
 
 Read this file before any module document: use the Status Bar, Module Status Table, and Task Summary below to determine which module(s) and task(s) the current request touches, then open only the relevant module documents on demand.
 
-> 📍 **Status Bar** · extension-pi-opencode [`implementing`] · 17/26 done · 0 blocked ·
-> Next task: **extension-pi-opencode.5.1**（deps satisfied） · Next gate: **extension-pi-opencode.5.5**
-> Last updated: 2026-08-27（distribution 已实现并验收；开始 P1 pi/OpenCode 适配）
+> 📍 **Status Bar** · plugin-claude-codex [`implementing`] · 21/26 done · 0 blocked ·
+> Next task: **plugin-claude-codex.6.1**（deps satisfied） · Next gate: **plugin-claude-codex.6.4**
+> Last updated: 2026-08-27（extension-pi-opencode 已实现验收；pi install 实装验证由用户 push 后补做；开始 P2 插件适配）
 
 ## Module Status Table
 
@@ -16,7 +16,7 @@ Read this file before any module document: use the Status Bar, Module Status Tab
 | operations | implemented | 5/5 (100%) | cache-contract | SKILL.md 五操作规则已落地 |
 | tooling | implemented | 4/4 (100%) | cache-contract | init/doctor 脚本 12 项注入测试全过 |
 | distribution | implemented | 4/4 (100%) | - | P0 分发面完成：AGENTS.md 正典 + 适配矩阵 + README 双语 |
-| extension-pi-opencode | design | 0/5 (0%) | distribution | P1：pi 包（@xypur/ctx）与扩展 + OpenCode 零 JS 命令 |
+| extension-pi-opencode | implemented | 5/5 (100%) | distribution | P1 完成：pi 包（@xypur/ctx）与扩展 + OpenCode 零 JS 命令 |
 | plugin-claude-codex | design | 0/4 (0%) | distribution, extension-pi-opencode | P2：插件清单（Codex 先）+ SessionStart hook + 五命令 |
 
 `Progress` = `done/total (pct)` counting every task checkbox in `<module>/tasks.md`. Status values: `draft` → `design` → `implementing` → `implemented` → `archived`. Archived modules stay listed with status `archived`; their directories are not moved.
@@ -44,11 +44,11 @@ Global index of every task across modules. Add one row per task in `<module>/tas
 | distribution.4.2 | [x] | distribution | agent-portability 适配矩阵 | distribution.4.1 |
 | distribution.4.3 | [x] | distribution | README 双语 | distribution.4.2 |
 | distribution.4.4 | [x] | distribution | Checkpoint — 冷启动走查 | distribution.4.3 |
-| extension-pi-opencode.5.1 | [ ] | extension-pi-opencode | 根 package.json（@xypur/ctx） | - |
-| extension-pi-opencode.5.2 | [ ] | extension-pi-opencode | hooks/ctx-hint.js 共享常量 | distribution.4.1 |
-| extension-pi-opencode.5.3 | [ ] | extension-pi-opencode | pi-extension 命令与启动提示 | extension-pi-opencode.5.1, extension-pi-opencode.5.2 |
-| extension-pi-opencode.5.4 | [ ] | extension-pi-opencode | OpenCode 命令文件 | distribution.4.1 |
-| extension-pi-opencode.5.5 | [ ] | extension-pi-opencode | Checkpoint — 安装与等价走查 | extension-pi-opencode.5.3, extension-pi-opencode.5.4 |
+| extension-pi-opencode.5.1 | [x] | extension-pi-opencode | 根 package.json（@xypur/ctx） | - |
+| extension-pi-opencode.5.2 | [x] | extension-pi-opencode | hooks/ctx-hint.js 共享常量 | distribution.4.1 |
+| extension-pi-opencode.5.3 | [x] | extension-pi-opencode | pi-extension 命令与启动提示 | extension-pi-opencode.5.1, extension-pi-opencode.5.2 |
+| extension-pi-opencode.5.4 | [x] | extension-pi-opencode | OpenCode 命令文件 | distribution.4.1 |
+| extension-pi-opencode.5.5 | [x] | extension-pi-opencode | Checkpoint — 安装与等价走查 | extension-pi-opencode.5.3, extension-pi-opencode.5.4 |
 | plugin-claude-codex.6.1 | [ ] | plugin-claude-codex | hooks/ctx-activate.js | extension-pi-opencode.5.2 |
 | plugin-claude-codex.6.2 | [ ] | plugin-claude-codex | 命令五条 × 两宿主形态 | distribution.4.1 |
 | plugin-claude-codex.6.3 | [ ] | plugin-claude-codex | 插件清单与 marketplace（Codex 先） | plugin-claude-codex.6.1, plugin-claude-codex.6.2 |

@@ -8,22 +8,22 @@
 
 ## Phase 1: pi 切片
 
-- [ ] 5.1 根 package.json（pi 包声明）
+- [x] 5.1 根 package.json（pi 包声明）
   - name `@xypur/ctx`、pi.skills / pi.extensions 字段；零依赖
   - _Requirements: 1.1, 1.2, 1.3_
-- [ ] 5.2 hooks/ctx-hint.js 共享常量
+- [x] 5.2 hooks/ctx-hint.js 共享常量
   - 激活提示文案 + 根索引检测辅助；双适配器唯一真源
   - _Requirements: 2.2_
-- [ ] 5.3 pi-extension/index.js
+- [x] 5.3 pi-extension/index.js
   - 五命令注册 + 启动提示（import ctx-hint 常量）；静默降级
   - _Requirements: 2.1, 2.2, 2.3_
 
 ## Phase 2: OpenCode 切片
 
-- [ ] 5.4 .opencode/command/ 五命令文件
+- [x] 5.4 .opencode/command/ 五命令文件
   - 薄模板、零 JS、登记矩阵
   - _Requirements: 3.1, 3.2, 3.3_
-- [ ] 5.5 Checkpoint — 安装与等价走查
+- [x] 5.5 Checkpoint — 安装与等价走查
   - _Requirements: 1.x, 2.x, 3.x_
   - pi 安装走查（skill 可见 + 命令可用 + 提示注入）；四宿主命令展开语义对账。结果向用户汇报后再勾选。
 
