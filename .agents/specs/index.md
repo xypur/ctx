@@ -4,20 +4,20 @@ Organized by functional module, each module is a self-contained directory (requi
 
 Read this file before any module document: use the Status Bar, Module Status Table, and Task Summary below to determine which module(s) and task(s) the current request touches, then open only the relevant module documents on demand.
 
-> 📍 **Status Bar** · 全模块 [`implemented`] · 26/26 done · 0 blocked ·
-> Next task: none（适配层计划全部完成，待归档确认） · Next gate: none remaining
-> Last updated: 2026-08-27（plugin-claude-codex 6.4 验收完成；适配层三模块 + 前期三模块全部 implemented）
+> 📍 **Status Bar** · 全模块归档 [`archived`] · 26/26 done · 0 blocked ·
+> Next task: none（规格库收口，无待办） · Next gate: none remaining
+> Last updated: 2026-08-27（用户确认验收：六模块全部 archived；可选项按用户决定不做）
 
 ## Module Status Table
 
 | Module | Status | Progress | Depends on | Notes |
 |--------|--------|----------|------------|-------|
-| cache-contract | implemented | 4/4 (100%) | - | 三份 reference 契约文档已落地 |
-| operations | implemented | 5/5 (100%) | cache-contract | SKILL.md 五操作规则已落地 |
-| tooling | implemented | 4/4 (100%) | cache-contract | init/doctor 脚本 12 项注入测试全过 |
-| distribution | implemented | 4/4 (100%) | - | P0 分发面完成：AGENTS.md 正典 + 适配矩阵 + README 双语 |
-| extension-pi-opencode | implemented | 5/5 (100%) | distribution | P1 完成：pi 包（@xypur/ctx）与扩展 + OpenCode 零 JS 命令 |
-| plugin-claude-codex | implemented | 4/4 (100%) | distribution, extension-pi-opencode | P2 完成：插件清单（Codex 先）+ SessionStart hook + 五命令 |
+| cache-contract | archived | 4/4 (100%) | - | 三份 reference 契约文档已落地 |
+| operations | archived | 5/5 (100%) | cache-contract | SKILL.md 五操作规则已落地 |
+| tooling | archived | 4/4 (100%) | cache-contract | init/doctor 脚本 12 项注入测试全过 |
+| distribution | archived | 4/4 (100%) | - | P0 分发面完成：AGENTS.md 正典 + 适配矩阵 + README 双语 |
+| extension-pi-opencode | archived | 5/5 (100%) | distribution | P1 完成：pi 包（@xypur/ctx）与扩展 + OpenCode 零 JS 命令 |
+| plugin-claude-codex | archived | 4/4 (100%) | distribution, extension-pi-opencode | P2 完成：插件清单（Codex 先）+ SessionStart hook + 五命令 |
 
 `Progress` = `done/total (pct)` counting every task checkbox in `<module>/tasks.md`. Status values: `draft` → `design` → `implementing` → `implemented` → `archived`. Archived modules stay listed with status `archived`; their directories are not moved.
 
@@ -87,3 +87,4 @@ distribution (P0 正典先行：4.1→4.2→4.3→4.4)
 | 2026-08-27 | 新增适配层规划四模块（对照 ~/dev/references/ponytail 的 docs/agent-portability.md 分层）：distribution（P0 正典与分发面）、extension-pi-opencode（pi 包扩展 + OpenCode 零 JS 命令）、plugin-claude-codex（Claude/Codex 插件 + hook + 命令）、rules-copies（规则副本 + check-adapters 对账）；核心原则沿用 ponytail Adapter Rule——行为只在 skills/ctx，适配器保持薄 |
 | 2026-08-27 | 用户确认三项决议并重排：pi 优先于 Codex/Claude（extension-pi-opencode 重编号为模块 5，plugin-claude-codex 为模块 6，宿主顺序 Codex 先）；包名定为 `@xypur/ctx`；README 双语确认。优先级反转的连带调整：激活提示常量上移至 `hooks/ctx-hint.js`（由先行模块 5.2 交付），避免后模块被前模块依赖 |
 | 2026-08-27 | 用户裁剪 P3：rules-copies 模块整体移除（纯广度层、无下游依赖，YAGNI）；矩阵↔实物对账职责并入各模块 checkpoint 走查；distribution / plugin-claude-codex / extension-pi-opencode 三模块的 requirements 与 design 引用同步修订，随后进入实施 |
+| 2026-08-27 | 适配层实施完成并全部验收：distribution（4350f38）、extension-pi-opencode（aa5166f）、plugin-claude-codex（f8dd2ae）三模块 checkpoint 逐一走查通过；用户确认将六个模块全部置为 archived，可选项（ctx 检查点记录、LICENSE）不做 |
