@@ -39,15 +39,17 @@ description: >-
    （solved / partial / unresolved / deferred / rejected）；验证只写
    passed / failed / Not run。
 4. 英文正典优先；宣布操作完成前必须先同步中文镜像 + `.i18n.yaml`。
-5. 不创建分类子目录或额外索引——分类只存在于 front matter 的 tags。
+5. 分类以正文类型节为真源，front matter 的 `tags` 由其推导（见 `checkpoint-format.md`）；
+   仍不创建分类子目录或额外索引。
 
 ## ctx-create
 
 1. 读根 `index.md`；确定目标：新的 `thread` slug（kebab-case），或正在被取代的既有线程。
-2. 选初始 `tags`（受控词表）。混合了 feature 与 bug-fix 的会话直接在同一份检查点里同时打两个标签。
+2. 规划正文大纲：六个类型节中哪些有内容（定序见 `checkpoint-format.md`）。混合会话直接在同一份检查点里携带多个类型节。
 3. 按 `file-naming.md` 命名；同分钟冲突时使用下一个 `-NN` 序号。
 4. 按 `checkpoint-format.md` 写英文正典；设 `created=updated=now`、
-   `prev` = 上一 head 路径或 null、`head: true`、`status: active`。
+   `prev` = 上一 head 路径或 null、`head: true`、`status: active`；
+   写完后从类型节推导 `tags`。
 5. 翻译生成 `<base>.zh.md`，计算双侧 blob hash，写 `<base>.i18n.yaml`。
 6. 根索引：追加 Records 行 + 线程行（被取代的旧 head 移除其行），把本文档置为 head。
 7. 只有在第 4–6 步完整承接旧记录的仍然有效的事实之后，才把前一 head 的 `status` 改为 `superseded`。
@@ -63,10 +65,10 @@ description: >-
 通过根索引 Active Threads 定位 head（找不到则报告并建议运行 `ctx`；不得擅自新建）。
 
 1. 保持文件名、`created`、`thread` 不变；刷新 `updated`。
-2. 对实际存在的 Problem / Requirements / Decision / Consequences / Verification 各节做结构化增量合并：
+2. 对实际存在的类型节与子字段做结构化增量合并（增量属于尚未出现的类型时可新增该类型节）：
    新事实就地整合、状态带证据推进；绝不在文末粘贴第二份完整摘要。
 3. 向 `Update Log` 追加一条带时间戳的变化记录。
-4. tags 可以增加取值；仍然适用的标签不得移除。
+4. 合并后从类型节重新推导 `tags`；只有当某类型节内容真正消失时才允许减去对应标签——优先保留历史。
 5. 同步镜像 + 重写 `.i18n.yaml` hash；摘要变化时更新根索引 Records 行。
 
 ## ctx-resume

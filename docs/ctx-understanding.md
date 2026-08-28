@@ -195,11 +195,9 @@ Index 中每个缓存文件的记录不能只写标题和链接，而应该回�
 
 | 字段 | 要回答的问题 |
 |---|---|
-| Problem | 这条记录解决了什么问题？ |
-| Decision / changes | 做了什么决策，修改了什么？ |
-| Consequences | 产生了哪些收益、代价和取舍？ |
+| <类型> 摘要 | 这条记录在该类型（architecture、feature 等）下做了什么？ |
 | Verification | 如何验证，结果是什么？ |
-| Tags | 会话涉及哪些分类（feature、bug-fix 等）？ |
+| Verification | 如何验证，结果是什么？ |
 
 根索引中的内容应当保持紧凑，使用一行或几行摘要；详细理由、完整文件列表和验证输出放在对应的缓存文件中。
 
@@ -207,13 +205,13 @@ Index 中每个缓存文件的记录不能只写标题和链接，而应该回�
 
 ## 8. 完整缓存文件格式
 
-缓存文件应当短而实，类似 DeepSeek Harness Agent Notes 的密度：头部用 YAML front matter 承载机器可读元数据，正文只保留几个必要小节：
+缓存文件应当短而实，类似 DeepSeek Harness Agent Notes 的密度：头部用 YAML front matter 承载机器可读元数据，正文按工作类型组织（类型节 + 节内分析子字段，真源见 `.agents/specs/type-outline/`）：
 
 ```markdown
 ---
 created: YYYY-MM-DD HH:MM <timezone>
 updated: YYYY-MM-DD HH:MM <timezone>
-tags: []                      # 受控标签集，可组合，可为空
+tags: []                      # 由正文类型节推导，可为空
 status: active                # active | superseded | archived
 thread: <stable-thread-slug>
 prev: null                    # 上一个线程 head 的路径，无则为 null
@@ -223,26 +221,22 @@ next: <one-line-next-action>  # 可选，一行说明下一步做什么
 
 # Context Checkpoint: <title>
 
-## Problem
+## architecture
 
-问题和目标，两三句话说清楚。
-
-## Requirements
+**Requirements**
 
 | ID | Requirement | Status | Evidence |
 |---|---|---|---|
 
-## Decision
+**Decision**: 做了什么决策、为什么选择它，以及修改了哪些文件和行为（列出关键路径即可，不区分 created/modified/deleted 子清单）。
 
-做了什么决策、为什么选择它，以及修改了哪些文件和行为（列出关键路径即可，不区分 created/modified/deleted 子清单）。
+**Consequences**: 收益、代价和取舍，几行即可。
 
-## Consequences
+**Verification**: 如何验证，结果是什么。
 
-收益、代价和取舍，几行即可。
+## process
 
-## Verification
-
-如何验证，结果是什么。
+…（只写有内容的类型节，按定序 architecture → process → feature → simplification → bug-fix → testing 排列）
 
 ## Update Log
 
@@ -252,8 +246,8 @@ next: <one-line-next-action>  # 可选，一行说明下一步做什么
 写作规则：
 
 - 正文目标是几十行讲完一次压缩，不是复刻会话全文；
-- 有内容才写小节，没有就省略，不留空壳；
-- 关键技术上下文只在确实影响理解时写入 Problem 或 Decision，不设独立章节；
+- 类型节与节内子字段都是有内容才写，没有就省略，不留空壳；
+- 关键技术上下文只在确实影响理解时并入相关类型节的 **Decision** 子字段，不设独立章节；
 - 不要为了填模板而展开无信息量的段落。
 
 ### 需求状态
@@ -304,7 +298,7 @@ next: <one-line-next-action>  # 可选，一行说明下一步做什么
 1. 读取根索引并定位当前线程 head；
 2. 保持文件名和 `created` 不变；
 3. 更新 `updated`，可按需补充 `tags`；
-4. 合并 Problem、Requirements、Decision、Consequences、Verification 等实际存在的章节；
+4. 按类型节与节内子字段做结构化合并（architecture / process / feature / simplification / bug-fix / testing 中实际存在的节）；
 5. 在 `Update Log` 中追加本次变化；
 6. 同步中文镜像、`.i18n.yaml` 和根索引摘要。
 

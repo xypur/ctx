@@ -43,20 +43,22 @@ Authoritative references (read on demand):
    `passed/failed/Not run` only.
 4. English canon first; sync the Chinese mirror + `.i18n.yaml` before
    declaring an operation done.
-5. Never create classification directories or extra indexes — tags live in
-   front matter only.
+5. Classification lives in the body's type sections; front-matter `tags` are
+   derived from them (see `checkpoint-format.md`). Never create classification
+   directories or extra indexes.
 
 ## ctx-create
 
 1. Read root `index.md`; determine target: new `thread` slug (kebab-case)
    or an existing thread being superseded.
-2. Choose initial `tags` (controlled vocab). A mixed feature+bug-fix session
-   simply gets both tags in ONE checkpoint.
+2. Plan the body outline: which of the six type sections have content
+   (canonical order, see `checkpoint-format.md`). A mixed session simply
+   carries several type sections in ONE checkpoint.
 3. Name files per `file-naming.md`; if a name collides within the same
    minute, use the next `-NN` ordinal.
 4. Write canon per `checkpoint-format.md`; set
    `created=updated=now`, `prev` = previous head path or null, `head: true`,
-   `status: active`.
+   `status: active`; then derive `tags` from the written type sections.
 5. Translate to `<base>.zh.md`, compute both blob hashes,
    write `<base>.i18n.yaml`.
 6. Root index: add Records line + thread row (superseded old head loses its
@@ -77,12 +79,13 @@ Locate head via root index Active Threads (if missing → report, suggest
 `ctx`; do not silently create).
 
 1. Keep filename, `created`, `thread` unchanged; refresh `updated`.
-2. Merge increments structurally into whichever of Problem / Requirements /
-   Decision / Consequences / Verification actually exist: new facts integrated
-   in place, statuses moved forward with evidence, no copy-pasted second
-   summary dumped at the end.
+2. Merge increments structurally into the type sections and sub-fields that
+   actually exist (a new type section may be added when the increment belongs
+   to a type not yet present): new facts integrated in place, statuses moved
+   forward with evidence, no copy-pasted second summary dumped at the end.
 3. Append one timestamped line to `Update Log`.
-4. Tags may gain values; never lose ones that still apply.
+4. Re-derive `tags` from the sections after merging; a tag may only be dropped
+   when its section content is genuinely gone — prefer keeping history.
 5. Sync mirror + rewrite `.i18n.yaml` hashes; update the root index record
    line if its digest changed.
 

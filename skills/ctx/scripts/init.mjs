@@ -17,7 +17,7 @@ const files = [
       '# Context Index',
       '',
       'AI-facing first entry to project memory. One summary line per active record:',
-      'Problem → Decision → Consequences → Verification.',
+      'type-prefixed digests + verification result.',
       '',
       '## Active Threads',
       '',

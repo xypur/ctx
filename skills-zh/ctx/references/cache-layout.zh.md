@@ -20,7 +20,7 @@
 
 1. `archive/` 是 `.agents/context/` 下唯一允许存在的子目录。
 2. 根层级只允许 `index.md`、平铺的检查点三件套和 `archive/`。
-3. 禁止创建 `feature/`、`bug-fix/` 之类的分类目录；分类一律通过 front matter 的 `tags` 表达（见 `checkpoint-format.md`）。
+3. 禁止创建 `feature/`、`bug-fix/` 之类的分类目录；分类通过正文的类型节表达（front matter 的 `tags` 由类型节推导；见 `checkpoint-format.md`）。
 4. `.zh.md` 与 `.i18n.yaml` 是正典的伴生文件，绝不作为独立记录进入任何索引。
 5. 每个会话一份检查点，使“这次会话发生了什么”从单个文件即可回答；同一任务跨会话的历史沿 `prev:` 链传递。
 
@@ -38,7 +38,7 @@
 # Context Index
 
 AI-facing first entry to project memory. One summary line per active record:
-Problem → Decision → Consequences → Verification.
+type-prefixed digests + verification result.
 
 ## Active Threads
 
@@ -52,10 +52,11 @@ Problem → Decision → Consequences → Verification.
 Superseded/archived records: [archive/index.md](archive/index.md)
 ```
 
-记录行格式（单行，字段顺序固定）：
+记录行格式（单行）：检查点实际含有的每个类型节各一个 `<类型>: <一行摘要>` 子句，
+按定序排列，最后跟一个 Verification 子句：
 
 ```markdown
-- [2026-08-26-2115-login-session-fix.md](2026-08-26-2115-login-session-fix.md) — Problem: <一行>; Decision: <一行>; Consequences: <一行>; Verification: passed|failed|Not run · tags: feature, bug-fix
+- [2026-08-26-2115-login-session-fix.md](2026-08-26-2115-login-session-fix.md) — architecture: <一行>; feature: <一行> · Verification: passed|failed|Not run
 ```
 
 线程行格式：

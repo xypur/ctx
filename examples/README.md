@@ -9,8 +9,8 @@ the i18n yaml hashes were computed from these very files via
 | Directory | Shows |
 |---|---|
 | `empty-skeleton/` | what `init.mjs` scaffolds: root index + empty archive |
-| `login-redesign/` | full triplet (en + zh mirror + real-hash i18n.yaml), mixed tags `[feature, bug-fix]`, append already merged, Update Log trail, and an archive/index.md with a superseded-entry line |
-| `csv-import/` | minimal single-tag feature checkpoint, verification honestly `Not run` |
+| `login-redesign/` | full triplet (en + zh mirror + real-hash i18n.yaml), mixed type sections (`feature` + `bug-fix`, tags derived), append already merged, Update Log trail, and an archive/index.md with a superseded-entry line |
+| `csv-import/` | minimal single-section feature checkpoint, verification honestly `Not run` |
 
 Read in this order: `empty-skeleton/index.md` → `login-redesign/index.md`
 (L1) → `login-redesign/2026-08-27-1500-login-redesign.md` (L2) → its Update

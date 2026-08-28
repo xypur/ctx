@@ -1,7 +1,10 @@
 # Checkpoint Format
 
 Body skeleton and front matter schema for session checkpoints.
-Source of truth: `docs/ctx-understanding.md` §7–§8. Aim for tens of lines per compression; omit empty sections; never pad to fill the template.
+Source of truth: `.agents/specs/type-outline/` (body outline, tags derivation);
+storage and naming rationale lives in `docs/ctx-understanding.md` §3–§5.
+Aim for tens of lines per compression; omit empty sections and sub-fields;
+never pad to fill the template.
 
 ## Front matter
 
@@ -11,7 +14,7 @@ Required YAML header of every canon checkpoint:
 ---
 created: 2026-08-27 09:41 +08:00
 updated: 2026-08-27 14:02 +08:00
-tags: []                       # subset of controlled vocab below; [] allowed
+tags: []                       # derived from the body's type sections — never chosen independently
 status: active                 # active | superseded | archived
 thread: login-session          # stable kebab-case slug grouping related records
 prev: null                     # previous head path (relative) or null
@@ -26,15 +29,16 @@ Field rules:
 |---|---|
 | created | set once by ctx-create, never changes (append keeps it) |
 | updated | refreshed on every append |
-| tags | values only from the controlled vocab; multiple allowed |
+| tags | MUST equal the set of type sections present in the body; doctor enforces equality |
 | status | state machine: active → superseded → archived |
 | thread | groups a task's history across sessions |
 | prev | previous head of the same thread, or null |
 | head | true only while this doc is the thread's newest active record |
 
-Controlled tag vocabulary:
+Controlled type vocabulary — one set doubles as the tag values and the body
+section names:
 
-| Tag | Meaning |
+| Tag / section | Meaning |
 |---|---|
 | feature | new user- or model-visible capability |
 | bug-fix | defect, regression, or missing behavior fixed |
@@ -43,45 +47,65 @@ Controlled tag vocabulary:
 | simplification | deliberate reduction of code, behavior, or surface complexity |
 | testing | test infrastructure, strategy, verification design |
 
-Introducing a new tag requires amending the cache-contract spec first — do not invent tags ad hoc.
+Canonical section order when several appear:
+`architecture → process → feature → simplification → bug-fix → testing`.
+
+Introducing a new value requires amending the type-outline spec first — do not
+invent values ad hoc.
 
 ## Body skeleton
+
+The outline is the work-type taxonomy. The analytical questions — what was
+required, what was decided, what followed, how it was verified — are sub-fields
+inside each type section, never top-level headings.
 
 ```markdown
 # Context Checkpoint: <title>
 
-## Problem
+## architecture
 
-The problem and goal in two or three sentences.
-
-## Requirements
+**Requirements**
 
 | ID | Requirement | Status | Evidence |
 |---|---|---|---|
 
-## Decision
-
-What was decided, why, and which files/behaviors changed
+**Decision**: what was decided, why, and which files/behaviors changed
 (list key paths inline; no Created/Modified sub-inventories).
 
-## Consequences
+**Consequences**: benefits, costs, trade-offs — a few lines.
 
-Benefits, costs, trade-offs — a few lines.
+**Verification**: how it was verified and the result.
 
-## Verification
+## process
 
-How it was verified and the result.
+… (only sections with content appear, in canonical order)
 
 ## Update Log
 
 - 2026-08-27 14:02: appended <what changed>.
 ```
 
+Structure rules:
+
+1. `##` headings are ONLY type sections (lowercase, verbatim from the
+   vocabulary above) and `## Update Log`. Legacy analysis headings —
+   `Problem` / `Requirements` / `Decision` / `Consequences` / `Verification`
+   as `##` headings — are contract violations.
+2. Inside a type section exactly four sub-field labels exist: `**Requirements**`
+   (table), `**Decision**`, `**Consequences**`, `**Verification**`. Omit empty
+   sub-fields; omit a type section entirely when it has no content.
+3. Requirements IDs stay global across the document (spec clause references
+   remain stable); rows live in the table of the section they belong to.
+4. `## Update Log` is global — the cross-type timeline of the checkpoint.
+5. A pure orientation session may degenerate to title + Update Log with
+   `tags: []`.
+
 Writing rules:
 
-1. Include a section only if it has content; empty sections are omitted entirely.
-2. Key technical context goes inside Problem or Decision when it genuinely aids understanding; there is no standalone section for it.
-3. Changes fold into Decision as inline path lists.
+1. Tens of lines per compression; no padded, information-free paragraphs.
+2. Key technical context folds into the `**Decision**` sub-field of the
+   relevant section when it genuinely aids understanding.
+3. Changes fold into `**Decision**` as inline path lists.
 
 ### Requirement statuses
 
@@ -97,10 +121,11 @@ Never mark work solved merely because a plan was written down.
 
 ### Spec-linked sessions
 
-When the project tracks module specs under `.agents/specs/`, the Requirements
-table references those canonical clauses instead of redefining them:
+When the project tracks module specs under `.agents/specs/`, the
+`**Requirements**` table of the relevant type section references those
+canonical clauses instead of redefining them:
 
-1. `ID` cites the spec clause (e.g. `cache-contract 3.4`); do not paraphrase
+1. `ID` cites the spec clause (e.g. `type-outline 3.4`); do not paraphrase
    or restate the requirement text — link to it.
 2. `Evidence` points into the repo: paths under `.agents/specs/`, code paths,
    or command output.
@@ -114,6 +139,8 @@ Without a specs directory, define lightweight session-local requirement rows
 as usual — nothing else changes.
 
 ### Verification honesty
+
+In a `**Verification**` sub-field:
 
 - `passed` / `failed` only with real command output or review evidence;
 - otherwise write `Not run`;

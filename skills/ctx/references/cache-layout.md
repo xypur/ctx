@@ -21,7 +21,7 @@ Rules:
 
 1. `archive/` is the only subdirectory that may exist under `.agents/context/`.
 2. At the root level only `index.md`, flat checkpoint triplets, and `archive/` are allowed.
-3. Classification directories such as `feature/` or `bug-fix/` MUST NOT be created; classification is expressed through front matter `tags` (see `checkpoint-format.md`).
+3. Classification directories such as `feature/` or `bug-fix/` MUST NOT be created; classification is expressed through the body's type sections (front-matter `tags` are derived from them; see `checkpoint-format.md`).
 4. `.zh.md` and `.i18n.yaml` files are companions of their canon, never indexed as separate records.
 5. Storing one checkpoint per session keeps "what happened in this session" answerable from a single file; cross-session history for the same task travels along `prev:` links.
 
@@ -39,7 +39,7 @@ Fresh scaffold rendered by `init.mjs`:
 # Context Index
 
 AI-facing first entry to project memory. One summary line per active record:
-Problem → Decision → Consequences → Verification.
+type-prefixed digests + verification result.
 
 ## Active Threads
 
@@ -53,10 +53,12 @@ Problem → Decision → Consequences → Verification.
 Superseded/archived records: [archive/index.md](archive/index.md)
 ```
 
-Record line format (single line, this exact field order):
+Record line format (single line): one `<type>: <digest>` clause per type section
+the checkpoint actually has, in canonical order, then a single Verification
+clause:
 
 ```markdown
-- [2026-08-26-2115-login-session-fix.md](2026-08-26-2115-login-session-fix.md) — Problem: <one line>; Decision: <one line>; Consequences: <one line>; Verification: passed|failed|Not run · tags: feature, bug-fix
+- [2026-08-26-2115-login-session-fix.md](2026-08-26-2115-login-session-fix.md) — architecture: <one line>; feature: <one line> · Verification: passed|failed|Not run
 ```
 
 Thread row format:

@@ -6,6 +6,8 @@ import { fileURLToPath } from 'node:url';
 import {
   TAGS,
   STATUSES,
+  TYPE_ORDER,
+  parseBody,
   baseNameOk,
   slugOf,
   blobHash,
@@ -100,6 +102,41 @@ for (const base of bases) {
       if (!TAGS.has(t)) violation('tags-vocab', canonRel, `'${t}' is not a controlled tag`);
   } else if ('tags' in d && d.tags !== undefined) {
     violation('schema', canonRel, 'tags must be a YAML array');
+  }
+
+  // ---- Body outline rules (type-outline spec) ----
+  const parsed = parseBody(canonical);
+  for (const h of parsed.legacyHeadings)
+    violation('legacy-skeleton', canonRel, `legacy heading '## ${h}' — the body must use type sections`);
+  for (const h of parsed.unknownHeadings)
+    violation('section-vocab', canonRel, `unknown '## ${h}' heading — only type sections and Update Log allowed`);
+  for (const dup of parsed.duplicates)
+    violation('section-vocab', canonRel, `duplicate type section '${dup}'`);
+  const present = parsed.sections.map((s) => s.type);
+  const orderIdx = present.map((t) => TYPE_ORDER.indexOf(t));
+  for (let i = 1; i < orderIdx.length; i++) {
+    if (orderIdx[i] < orderIdx[i - 1]) {
+      violation('section-order', canonRel, `type sections out of canonical order: ${present.join(', ')}`);
+      break;
+    }
+  }
+  for (const s of parsed.sections) {
+    if (s.empty)
+      violation('subfield-invalid', canonRel, `type section '${s.type}' is empty — omit it entirely`);
+    for (const bad of s.invalidSubfields ?? [])
+      violation('subfield-invalid', canonRel, `'**${bad}**' is not a valid sub-field in '${s.type}'`);
+  }
+  if (Array.isArray(d.tags)) {
+    const tagSet = new Set(d.tags);
+    const sectSet = new Set(present);
+    const missing = [...sectSet].filter((t) => !tagSet.has(t));
+    const extra = [...tagSet].filter((t) => !sectSet.has(t));
+    if (missing.length || extra.length)
+      violation(
+        'tags-section-mismatch',
+        canonRel,
+        `tags [${d.tags.join(', ')}] != type sections [${present.join(', ') || 'none'}]`,
+      );
   }
 
   if ('thread' in d && typeof d.thread === 'string' && !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(d.thread))

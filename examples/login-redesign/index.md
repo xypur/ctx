@@ -1,7 +1,7 @@
 # Context Index
 
 AI-facing first entry to project memory. One summary line per active record:
-Problem → Decision → Consequences → Verification.
+type-prefixed digests + verification result.
 
 ## Active Threads
 
@@ -11,7 +11,7 @@ Problem → Decision → Consequences → Verification.
 
 ## Records
 
-- [2026-08-27-1500-login-redesign.md](2026-08-27-1500-login-redesign.md) — Problem: session expiry hard-logs-out users and refresh is unwired; Decision: add auth refresh interceptor with retry masking; Consequences: fewer logouts, one extra round-trip on 401; Verification: passed (unit + e2e locally) · tags: feature, bug-fix
+- [2026-08-27-1500-login-redesign.md](2026-08-27-1500-login-redesign.md) — feature: auth refresh interceptor wired (R1/R2 solved); bug-fix: token masking pending (R3 unresolved) · Verification: passed (unit + e2e locally)
 
 ## Archive
 

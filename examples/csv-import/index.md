@@ -1,7 +1,7 @@
 # Context Index
 
 AI-facing first entry to project memory. One summary line per active record:
-Problem → Decision → Consequences → Verification.
+type-prefixed digests + verification result.
 
 ## Active Threads
 
@@ -11,7 +11,7 @@ Problem → Decision → Consequences → Verification.
 
 ## Records
 
-- [2026-08-25-0902-csv-import-upload.md](2026-08-25-0902-csv-import-upload.md) — Problem: bulk CSV import uploads block the UI thread; Decision: chunked background upload with progress events; Consequences: responsive UI, retry complexity; Verification: Not run · tags: feature
+- [2026-08-25-0902-csv-import-upload.md](2026-08-25-0902-csv-import-upload.md) — feature: chunked background upload with progress events · Verification: Not run
 
 ## Archive
 
