@@ -5,35 +5,45 @@
 
 ## feature
 
-**Requirements**
+### Requirements
 
 | ID | Requirement | Status | Evidence |
 |---|---|---|---|
 | R1 | 会话过期后经静默刷新优雅存活 | solved | `npm test -- auth` 全绿（14 例） |
 | R2 | 刷新端点接入请求管线 | solved | e2e `login-refresh.spec.ts` 本地通过 |
 
-**Decision**：会话过期会把用户硬性登出，且刷新端点早已存在但从未接入请求管线，
+### Decision
+
+会话过期会把用户硬性登出，且刷新端点早已存在但从未接入请求管线，
 长时间编辑会话因此丢失未保存的工作。引入共享认证拦截器
 （`src/auth/interceptor.ts`）：捕获 401、轮换一次 token、重放原请求。
 
-**Consequences**：过期不再强制登出、无数据丢失；接受的代价是每个过期 token
+### Consequences
+
+过期不再强制登出、无数据丢失；接受的代价是每个过期 token
 多一次往返，以及未来所有客户端改动都必须维护的拦截器复杂度。
 
-**Verification**：passed —— `npm test -- auth`（单测）与
+### Verification
+
+passed —— `npm test -- auth`（单测）与
 `npx playwright test login-refresh`（e2e），均对本地 dev server 执行。
 
 ## bug-fix
 
-**Requirements**
+### Requirements
 
 | ID | Requirement | Status | Evidence |
 |---|---|---|---|
 | R3 | 审计日志在重试时屏蔽 token 值 | unresolved | 调试模式下拦截器仍记录原始 header |
 
-**Decision**：日志输出前屏蔽 token 值并入同一个拦截器，而非独立修复——
+### Decision
+
+日志输出前屏蔽 token 值并入同一个拦截器，而非独立修复——
 在共享咽喉点上设一道护栏。
 
-**Verification**：Not run —— 调试模式下拦截器仍记录原始 header（见 R3）。
+### Verification
+
+Not run —— 调试模式下拦截器仍记录原始 header（见 R3）。
 
 ## Update Log
 

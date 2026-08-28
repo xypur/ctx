@@ -115,12 +115,12 @@ export const TYPE_ORDER = [
 export const TYPE_SET = new Set(TYPE_ORDER);
 export const SUBFIELD_LABELS = new Set(['Requirements', 'Decision', 'Consequences', 'Verification']);
 const LEGACY_HEADINGS = new Set(['Problem', 'Requirements', 'Decision', 'Consequences', 'Verification']);
-
 /**
  * Parse a checkpoint's body (front matter stripped by the caller if desired —
  * this function tolerates its presence). Returns the h1 title, the type
- * sections in order of appearance (with their sub-field labels and emptiness),
- * any legacy/unknown h2 headings, and whether an Update Log section exists.
+ * sections in order of appearance (with their h3 sub-field headings and
+ * emptiness), any legacy/unknown h2 headings, and whether an Update Log
+ * section exists.
  */
 export function parseBody(text) {
   const body = String(text).replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n?/, '');
@@ -150,15 +150,14 @@ export function parseBody(text) {
     }
     if (!current) continue;
     const trimmed = line.trim();
-    const sf = /^\*\*(Requirements|Decision|Consequences|Verification)\*\*/.exec(trimmed);
-    if (sf) {
-      if (!current.subfields.includes(sf[1])) current.subfields.push(sf[1]);
-      current.empty = false;
-      continue;
-    }
-    const bad = /^\*\*([^*]+)\*\*/.exec(trimmed);
-    if (bad) {
-      (current.invalidSubfields ??= []).push(bad[1]);
+    const h3 = /^###\s+(.*?)\s*$/.exec(line);
+    if (h3) {
+      const name = h3[1];
+      if (SUBFIELD_LABELS.has(name)) {
+        if (!current.subfields.includes(name)) current.subfields.push(name);
+      } else {
+        (current.invalidSubfields ??= []).push(name);
+      }
       current.empty = false;
       continue;
     }

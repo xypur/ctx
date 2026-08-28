@@ -64,17 +64,23 @@ inside each type section, never top-level headings.
 
 ## architecture
 
-**Requirements**
+### Requirements
 
 | ID | Requirement | Status | Evidence |
 |---|---|---|---|
 
-**Decision**: what was decided, why, and which files/behaviors changed
+### Decision
+
+What was decided, why, and which files/behaviors changed
 (list key paths inline; no Created/Modified sub-inventories).
 
-**Consequences**: benefits, costs, trade-offs — a few lines.
+### Consequences
 
-**Verification**: how it was verified and the result.
+Benefits, costs, trade-offs — a few lines.
+
+### Verification
+
+How it was verified and the result.
 
 ## process
 
@@ -91,9 +97,10 @@ Structure rules:
    vocabulary above) and `## Update Log`. Legacy analysis headings —
    `Problem` / `Requirements` / `Decision` / `Consequences` / `Verification`
    as `##` headings — are contract violations.
-2. Inside a type section exactly four sub-field labels exist: `**Requirements**`
-   (table), `**Decision**`, `**Consequences**`, `**Verification**`. Omit empty
-   sub-fields; omit a type section entirely when it has no content.
+2. Inside a type section exactly four sub-field headings exist — `### Requirements`
+   (table), `### Decision`, `### Consequences`, `### Verification` — and `###` is
+   never used for anything else. Omit empty sub-fields; omit a type section
+   entirely when it has no content.
 3. Requirements IDs stay global across the document (spec clause references
    remain stable); rows live in the table of the section they belong to.
 4. `## Update Log` is global — the cross-type timeline of the checkpoint.
@@ -103,9 +110,9 @@ Structure rules:
 Writing rules:
 
 1. Tens of lines per compression; no padded, information-free paragraphs.
-2. Key technical context folds into the `**Decision**` sub-field of the
+2. Key technical context folds into the `### Decision` sub-section of the
    relevant section when it genuinely aids understanding.
-3. Changes fold into `**Decision**` as inline path lists.
+3. Changes fold into `### Decision` as inline path lists.
 
 ### Requirement statuses
 
@@ -122,7 +129,7 @@ Never mark work solved merely because a plan was written down.
 ### Spec-linked sessions
 
 When the project tracks module specs under `.agents/specs/`, the
-`**Requirements**` table of the relevant type section references those
+`### Requirements` table of the relevant type section references those
 canonical clauses instead of redefining them:
 
 1. `ID` cites the spec clause (e.g. `type-outline 3.4`); do not paraphrase
@@ -140,7 +147,7 @@ as usual — nothing else changes.
 
 ### Verification honesty
 
-In a `**Verification**` sub-field:
+In the `### Verification` sub-section:
 
 - `passed` / `failed` only with real command output or review evidence;
 - otherwise write `Not run`;

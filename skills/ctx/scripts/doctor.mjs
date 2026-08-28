@@ -124,7 +124,7 @@ for (const base of bases) {
     if (s.empty)
       violation('subfield-invalid', canonRel, `type section '${s.type}' is empty — omit it entirely`);
     for (const bad of s.invalidSubfields ?? [])
-      violation('subfield-invalid', canonRel, `'**${bad}**' is not a valid sub-field in '${s.type}'`);
+      violation('subfield-invalid', canonRel, `'### ${bad}' is not a valid sub-field heading in '${s.type}'`);
   }
   if (Array.isArray(d.tags)) {
     const tagSet = new Set(d.tags);

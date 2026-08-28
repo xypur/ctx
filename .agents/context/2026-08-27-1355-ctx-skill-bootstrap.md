@@ -18,13 +18,13 @@ next: use ctx-append on future compactions of this session; wire doctor into rou
 
 ## architecture
 
-**Requirements**
+### Requirements
 
 | ID | Requirement | Status | Evidence |
 |---|---|---|---|
 | R1 | Revise design to session-scoped storage: flat `.agents/context/`, classification as tags derived from body type sections, `ctx-create`/`ctx-append` naming | solved | docs/ctx-understanding.md §3–§15 revised at 8407708 |
 
-**Decision**:
+### Decision
 1. Session = storage unit; one compression edits one checkpoint triplet.
    Mixed feature+bug-fix work shares one file via multiple type sections; task
    history crosses sessions through thread/prev/head chaining.
@@ -39,7 +39,9 @@ next: use ctx-append on future compactions of this session; wire doctor into rou
    (`lib.mjs#blobHash`, `sha1("blob <len>\0"+content)`); scripts stay in the
    English side only.
 
-**Consequences**: Benefits: retrieval is two hops maximum (index → checkpoint),
+### Consequences
+
+Benefits: retrieval is two hops maximum (index → checkpoint),
 small compactions cost nothing extra, Chinese readers get an equivalent mirror,
 and contract drift is mechanically detectable by doctor. Costs/trade-offs:
 single-session files grow when one session spans many topics (mitigated by
@@ -49,19 +51,21 @@ discipline enforced only by i18n-stale detection.
 
 ## process
 
-**Requirements**
+### Requirements
 
 | ID | Requirement | Status | Evidence |
 |---|---|---|---|
 | R2 | Create specs plans with requirement↔design↔task traceability | solved | .specs/ (cache-contract, operations, tooling), all statuses `implemented` in index.md |
 
-**Decision**: Skill ships at project root (`skills/ctx`, mirror `skills-zh/ctx`)
+### Decision
+
+Skill ships at project root (`skills/ctx`, mirror `skills-zh/ctx`)
 and is imported into other repos wholesale; host adapters map slash commands
 but never copy the rules.
 
 ## feature
 
-**Requirements**
+### Requirements
 
 | ID | Requirement | Status | Evidence |
 |---|---|---|---|
@@ -70,24 +74,30 @@ but never copy the rules.
 | R7 | Generated example caches demonstrating the contract incl. mixed type sections | solved | examples/{empty-skeleton,login-redesign,csv-import} all doctor-healthy |
 | R8 | Skill lives at repo-root skills/ (not .agents/skills/), scripts untranslated, zh mirror naming consistent | solved | final layout per understanding §3 |
 
-**Verification**: passed — all three example dirs report doctor-healthy.
+### Verification
+
+passed — all three example dirs report doctor-healthy.
 
 ## bug-fix
 
-**Decision**: Two implement-time fixes recorded in tooling CHANGELOG:
+### Decision
+
+Two implement-time fixes recorded in tooling CHANGELOG:
 independent kebab-case regex for thread slug validation, and `--update-i18n`
 no longer counting healed sides as violations.
 
 ## testing
 
-**Requirements**
+### Requirements
 
 | ID | Requirement | Status | Evidence |
 |---|---|---|---|
 | R5 | Doctor survives fault injection across every violation category | solved | 12/12 fixture cases pass (bad-tag, head-dup, prev-broken, status-enum, triplet-missing, naming, stray-dir, index-miss, i18n-stale→heal) |
 | R6 | Full lifecycle walk-through: create → append → supersede → archive → doctor healthy | solved | /tmp walk fixture, doctor exit=0 after prev-link repair |
 
-**Verification**: passed — tooling fixture suite 12/12 (fault injection per
+### Verification
+
+passed — tooling fixture suite 12/12 (fault injection per
 violation category, empty-scaffold healthy loop, update-i18n healing);
 lifecycle walk re-checked with doctor exit=0; commit 8407708 contains the full
 tree with clean status.

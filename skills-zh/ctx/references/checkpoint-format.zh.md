@@ -60,17 +60,23 @@ next: wire refresh redirect    # 可选，一行的下一步行动
 
 ## architecture
 
-**Requirements**
+### Requirements
 
 | ID | Requirement | Status | Evidence |
 |---|---|---|---|
 
-**Decision**: 做了什么决策、为什么、哪些文件/行为变化了
+### Decision
+
+做了什么决策、为什么、哪些文件/行为变化了
 （关键路径内联列出；不设 Created/Modified 子清单）。
 
-**Consequences**: 收益、代价和取舍，几行即可。
+### Consequences
 
-**Verification**: 如何验证，结果是什么。
+收益、代价和取舍，几行即可。
+
+### Verification
+
+如何验证，结果是什么。
 
 ## process
 
@@ -86,8 +92,9 @@ next: wire refresh redirect    # 可选，一行的下一步行动
 1. `##` 级标题只允许两种：类型节（小写、与词表逐字一致）和 `## Update Log`。
    旧式分析标题——`Problem` / `Requirements` / `Decision` / `Consequences` /
    `Verification` 作为 `##` 标题——一律构成契约违约。
-2. 类型节内恰好四种子字段标签：`**Requirements**`（表格）、`**Decision**`、
-   `**Consequences**`、`**Verification**`。空子字段省略；无内容的类型节整体省略。
+2. 类型节内恰好四种子字段标题——`### Requirements`（表格）、`### Decision`、
+   `### Consequences`、`### Verification`——且 `###` 级不做他用。空子字段省略；
+   无内容的类型节整体省略。
 3. Requirements 的 ID 全文全局编号（规格条款引用保持稳定）；行放在所属类型节的表格里。
 4. `## Update Log` 保持全局——检查点的跨类型时间线。
 5. 纯定向会话允许退化为 标题 + Update Log 且 `tags: []`。
@@ -95,8 +102,8 @@ next: wire refresh redirect    # 可选，一行的下一步行动
 写作规则：
 
 1. 一次压缩几十行写完；不留无信息量的注水段落。
-2. 关键技术上下文在确实有助于理解时，并入相关类型节的 `**Decision**` 子字段。
-3. 变更以内联路径清单并入 `**Decision**`。
+2. 关键技术上下文在确实有助于理解时，并入相关类型节的 `### Decision` 子节。
+3. 变更以内联路径清单并入 `### Decision`。
 
 ### 需求状态
 
@@ -112,7 +119,7 @@ next: wire refresh redirect    # 可选，一行的下一步行动
 
 ### 规格联动会话
 
-当项目在 `.agents/specs/` 下维护模块规格时，相关类型节的 `**Requirements**`
+当项目在 `.agents/specs/` 下维护模块规格时，相关类型节的 `### Requirements`
 表直接引用其条款，不另行定义：
 
 1. `ID` 引用规格条款号（如 `type-outline 3.4`）；不得转述或重写需求文本——
@@ -127,7 +134,7 @@ next: wire refresh redirect    # 可选，一行的下一步行动
 
 ### 验证诚实性
 
-在 `**Verification**` 子字段中：
+在 `### Verification` 子节中：
 
 - 只有真实命令输出或评审证据才可写 `passed` / `failed`；
 - 否则写 `Not run`；

@@ -12,22 +12,28 @@ head: true
 
 ## feature
 
-**Requirements**
+### Requirements
 
 | ID | Requirement | Status | Evidence |
 |---|---|---|---|
 | R1 | Import runs off the UI thread with visible progress | solved | manual observation on 10k-row fixture |
 
-**Decision**: Bulk CSV imports blocked the UI thread with no progress or
+### Decision
+
+Bulk CSV imports blocked the UI thread with no progress or
 recovery feedback; split the file into 500-row chunks uploaded sequentially
 from a worker, with progress events driving a determinate bar. Chosen over one
 multipart request to keep per-chunk retries cheap.
 
-**Consequences**: UI stays responsive and partial failures resume from the
+### Consequences
+
+UI stays responsive and partial failures resume from the
 failed chunk; cost is server-side reassembly logic plus N+1 request overhead
 for small files.
 
-**Verification**: Not run — only manual observation on the dev build so far.
+### Verification
+
+Not run — only manual observation on the dev build so far.
 
 ## Update Log
 
