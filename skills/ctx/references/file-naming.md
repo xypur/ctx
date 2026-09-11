@@ -1,7 +1,8 @@
 # File Naming & Bilingual Triplet Contract
 
 Source of truth: `docs/ctx-understanding.md` §5 and §10.
-`scripts/doctor.mjs` validates naming and `.i18n.yaml` freshness.
+`scripts/doctor.mjs` validates naming, `.i18n.yaml` freshness, and the
+language contract.
 
 ## Checkpoint naming
 
@@ -40,9 +41,21 @@ Every canonical checkpoint ships as exactly three files sharing one `<base>`:
 
 ```text
 2026-08-26-2115-login-session-fix.md          # English canon — what agents read by default
-2026-08-26-2115-login-session-fix.zh.md       # Chinese mirror — humans / explicit zh requests
+2026-08-26-2115-login-session-fix.zh.md       # Chinese mirror — structural twin, human reading
 2026-08-26-2115-login-session-fix.i18n.yaml   # pairing credential
 ```
+
+Language contract (mechanically enforced; full rule text in
+`checkpoint-format.md` → Language contract):
+
+- the canon is English only — zero CJK/fullwidth characters outside code
+  spans, `next:` included; Chinese source text goes into backticks;
+- the mirror is Chinese and a structural twin — same front matter keys
+  (only `next` is translated), H1 plus the `（中文镜像）` suffix, identical
+  `##`/`###` heading sequence, identical Requirements table IDs; its CJK
+  characters MUST cover at least 30% of its letters;
+- compose the canon in English first, then derive the mirror from the
+  finished canon — never the other way around.
 
 `.i18n.yaml` schema:
 

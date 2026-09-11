@@ -166,3 +166,98 @@ export function parseBody(text) {
 
   return { title, sections, legacyHeadings, unknownHeadings, duplicates, updateLog };
 }
+
+// ---- Language contract parsing (bilingual-gate; see checkpoint-format.md) ----
+
+/** Single CJK/fullwidth character: radicals, CJK punctuation, kana, extensions, fullwidth forms. */
+export const CJK_RE =
+  /[\u2E80-\u2EFF\u3000-\u303F\u3040-\u30FF\u3400-\u4DBF\u4E00-\u9FFF\uF900-\uFAFF\uFE30-\uFE4F\uFF00-\uFFEF]/;
+const CJK_RE_G = new RegExp(CJK_RE.source, 'g');
+
+/** Minimum CJK share of a mirror's letters — CJK / (CJK + Latin). */
+export const MIRROR_CJK_MIN_RATIO = 0.3;
+
+/**
+ * Yield the lines outside fenced code blocks, dropping the fence markers
+ * themselves. Both the ``` and ~~~ fence styles are recognized; a fence opens
+ * on a line whose first non-space characters repeat the marker.
+ */
+function linesOutsideFences(text) {
+  const out = [];
+  let fence = null;
+  for (const line of String(text).split(/\r?\n/)) {
+    const m = /^\s*(```+|~~~+)/.exec(line);
+    if (m) {
+      const marker = m[1][0];
+      if (fence === null) fence = marker;
+      else if (fence === marker) fence = null;
+      continue;
+    }
+    if (fence === null) out.push(line);
+  }
+  return out;
+}
+
+/**
+ * Strip fenced blocks and inline code spans so quoted Chinese text, paths,
+ * commands, and literal strings are exempt from the language counts.
+ */
+export function stripCodeSpans(text) {
+  return linesOutsideFences(text)
+    .map((line) => line.replace(/`[^`\n]*`/g, ''))
+    .join('\n');
+}
+
+export function cjkCount(text) {
+  return (String(text).match(CJK_RE_G) ?? []).length;
+}
+
+export function latinCount(text) {
+  return (String(text).match(/[A-Za-z]/g) ?? []).length;
+}
+
+/** CJK share of letters (CJK + Latin); 0 when the text holds neither. */
+export function cjkRatio(text) {
+  const cjk = cjkCount(text);
+  const total = cjk + latinCount(text);
+  return total === 0 ? 0 : cjk / total;
+}
+
+/** `##`/`###` headings outside fenced code, as `h2 <name>` / `h3 <name>`, in order. */
+export function collectHeadings(text) {
+  const out = [];
+  for (const line of linesOutsideFences(text)) {
+    const h = /^(#{2,3})\s+(.*?)\s*$/.exec(line);
+    if (h) out.push(`${h[1]} ${h[2]}`);
+  }
+  return out;
+}
+
+/** First-column cells of markdown tables headed by an `ID` column, in order. */
+export function collectTableIds(text) {
+  const ids = [];
+  let inTable = false;
+  let tableIsId = false;
+  for (const line of linesOutsideFences(text)) {
+    const t = line.trim();
+    if (!t.startsWith('|')) {
+      inTable = false;
+      continue;
+    }
+    const cells = t
+      .split('|')
+      .slice(1, -1)
+      .map((c) => c.trim());
+    if (!inTable) {
+      inTable = true;
+      tableIsId = cells[0] === 'ID';
+      continue;
+    }
+    if (!tableIsId || cells.every((c) => /^:?-+:?$/.test(c))) continue;
+    ids.push(cells[0]);
+  }
+  return ids;
+}
+
+/** Exact H1 suffix every Chinese mirror carries. */
+export const MIRROR_TITLE_SUFFIX = '\uFF08\u4E2D\u6587\u955C\u50CF\uFF09';

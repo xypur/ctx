@@ -287,7 +287,8 @@ next: <one-line-next-action>  # 可选，一行说明下一步做什么
 2. 确定线程 slug 和初始 tags；
 3. 创建新的日期时间前缀文件及中文镜像、`.i18n.yaml`；
 4. 在 front matter 中用 `prev:` 链接上一个线程 head；
-5. 在根索引追加一行摘要，并将新文件设置为当前 head。
+5. 在根索引追加一行摘要，并将新文件设置为当前 head；
+6. 运行 `doctor.mjs` 并修至 healthy 才算完成（语言契约违例等同未完成）。
 
 旧记录不能直接删除。只有在新记录完整承接旧记录的有效事实后，旧记录才可以把 `status` 标记为 `superseded`，之后仍然保留链接。
 
@@ -300,7 +301,8 @@ next: <one-line-next-action>  # 可选，一行说明下一步做什么
 3. 更新 `updated`，可按需补充 `tags`；
 4. 按类型节与节内子字段做结构化合并（architecture / process / feature / simplification / bug-fix / testing 中实际存在的节）；
 5. 在 `Update Log` 中追加本次变化；
-6. 同步中文镜像、`.i18n.yaml` 和根索引摘要。
+6. 同步中文镜像、`.i18n.yaml` 和根索引摘要；
+7. 运行 `doctor.mjs` 并修至 healthy 才算完成（语言契约违例等同未完成）。
 
 `ctx-append` 是“结构化合并 + 追加更新日志”，不是把第二份完整摘要随意粘到文件末尾。
 
@@ -323,6 +325,14 @@ next: <one-line-next-action>  # 可选，一行说明下一步做什么
 - `.i18n.yaml` 记录两侧最近一次确认一致时的 git blob hash；
 - 中文镜像不作为独立缓存记录列入 index；
 - 编辑任一语言版本后，应先同步另一侧，再更新 `.i18n.yaml`。
+
+语言门禁（由 doctor 机械校验，规则全文见 `skills/ctx/references/checkpoint-format.md` → Language contract）：
+
+- 英文正典剔除代码区后零 CJK 与全角标点字符——中文原文、UI 文案、用户原话放入反引号或代码围栏；`next:` 等自然语言字段亦为英文；
+- 中文镜像剔除代码区后，CJK 字符占其「CJK + 拉丁字母」的比例不低于 30%；
+- 镜像是正典的结构孪生：front matter 键与值一致（仅 `next` 为译文）、标题为「正典标题（中文镜像）」、`##`/`###` 标题序列一致、需求表 ID 序列一致；
+- 结构关键词（类型节名、子字段名、状态枚举、front matter 键名）两侧一律英文，不翻译；
+- 先以英文直接成文正典，再由成品正典派生镜像；禁止先写中文草稿、只翻译标题。
 
 AI 默认恢复路径只读取英文：
 

@@ -9,7 +9,7 @@ head: true
 next: 本会话后续压缩用 ctx-append 续写本文件；提交前把 doctor 纳入常规检查
 ---
 
-# Context Checkpoint: 端到端落地 ctx 技能（中文镜像）
+# Context Checkpoint: Bootstrap the ctx skill end to end（中文镜像）
 
 > 本文件是 `2026-08-27-1355-ctx-skill-bootstrap.md` 的中文镜像，内容与英文正典等价；
 > AI 默认读取英文正典。front matter 与英文侧逐字段一致。

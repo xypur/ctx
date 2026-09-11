@@ -1,3 +1,14 @@
+---
+created: 2026-08-27 15:00 +08:00
+updated: 2026-08-27 16:10 +08:00
+tags: [feature, bug-fix]
+status: active
+thread: login-redesign
+prev: null
+head: true
+next: 将刷新接入后台 token 监视器
+---
+
 # Context Checkpoint: Login redesign（中文镜像）
 
 > 本文件是 `2026-08-27-1500-login-redesign.md` 的中文镜像，内容与英文正典等价；

@@ -1,6 +1,6 @@
 # 文件命名与双语三件套契约
 
-真源：`docs/ctx-understanding.md` §5 与 §10。`scripts/doctor.mjs` 校验命名与 `.i18n.yaml` 新鲜度。
+真源：`docs/ctx-understanding.md` §5 与 §10。`scripts/doctor.mjs` 校验命名、`.i18n.yaml` 新鲜度与语言契约。
 
 ## 检查点命名
 
@@ -39,9 +39,17 @@ slug 规则：
 
 ```text
 2026-08-26-2115-login-session-fix.md          # 英文正典 — Agent 默认读取
-2026-08-26-2115-login-session-fix.zh.md       # 中文镜像 — 人类 / 明确中文请求
+2026-08-26-2115-login-session-fix.zh.md       # 中文镜像 — 结构孪生，供人类阅读
 2026-08-26-2115-login-session-fix.i18n.yaml   # 配对凭据
 ```
+
+语言契约（由 doctor 机械强制；规则全文见 `checkpoint-format.md` → 语言契约）：
+
+- 英文正典剔除代码区后零 CJK 与全角字符（含 `next:`）——中文原文放入反引号；
+- 中文镜像是结构孪生：front matter 键与值一致（仅 `next` 为译文）、
+  标题为「正典标题（中文镜像）」、`##`/`###` 标题序列一致、需求表 ID
+  序列一致；且 CJK 字符占其字母总数 ≥ 30%；
+- 先以英文写成正典，再由成品正典派生镜像——不可反向。
 
 `.i18n.yaml` schema：
 

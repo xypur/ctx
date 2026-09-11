@@ -17,6 +17,13 @@ import {
   isFile,
   readIfFile,
   join,
+  stripCodeSpans,
+  cjkCount,
+  cjkRatio,
+  collectHeadings,
+  collectTableIds,
+  MIRROR_CJK_MIN_RATIO,
+  MIRROR_TITLE_SUFFIX,
 } from './lib.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -146,6 +153,79 @@ for (const base of bases) {
     const prevPath = resolve(ctxRoot, String(d.prev));
     if (!isFile(prevPath))
       violation('prev-broken', canonRel, `prev '${d.prev}' does not resolve to an existing file`);
+  }
+
+  // ---- Language contract (bilingual-gate spec) ----
+  const zhPath = join(ctxRoot, `${base}.zh.md`);
+  const zhText = readIfFile(zhPath);
+  if (zhText !== null) {
+    const zhRel = rel(zhPath);
+
+    const canonCjk = cjkCount(stripCodeSpans(canonical));
+    if (canonCjk > 0)
+      violation(
+        'canon-language',
+        canonRel,
+        `canon holds ${canonCjk} CJK/fullwidth char(s) outside code spans — write English; quote Chinese source text in backticks`,
+      );
+
+    const ratio = cjkRatio(stripCodeSpans(zhText));
+    if (ratio < MIRROR_CJK_MIN_RATIO)
+      violation(
+        'mirror-language',
+        zhRel,
+        `mirror CJK ratio ${(ratio * 100).toFixed(1)}% < ${(MIRROR_CJK_MIN_RATIO * 100).toFixed(0)}% (CJK / (CJK + Latin letters); code spans excluded)`,
+      );
+
+    const zhFm = parseFrontMatter(zhText);
+    if (!zhFm) {
+      violation('mirror-structure', zhRel, 'mirror is missing its YAML front matter');
+    } else {
+      const enKeys = Object.keys(d).sort();
+      const zhKeys = Object.keys(zhFm.data).sort();
+      if (enKeys.join(',') !== zhKeys.join(','))
+        violation(
+          'mirror-structure',
+          zhRel,
+          `front matter keys [${zhKeys.join(', ')}] != canon [${enKeys.join(', ')}]`,
+        );
+      for (const k of enKeys) {
+        if (k === 'next') continue;
+        if (JSON.stringify(zhFm.data[k]) !== JSON.stringify(d[k]))
+          violation('mirror-structure', zhRel, `front matter '${k}' differs from the canon`);
+      }
+    }
+
+    const zhTitle = parseBody(zhText).title;
+    const expectedTitle = parsed.title === null ? null : `${parsed.title}${MIRROR_TITLE_SUFFIX}`;
+    if (expectedTitle !== null && zhTitle !== expectedTitle)
+      violation('mirror-structure', zhRel, `H1 '${zhTitle ?? '(none)'}' != '${expectedTitle}'`);
+
+    const enHeads = collectHeadings(canonical);
+    const zhHeads = collectHeadings(zhText);
+    if (enHeads.join('\n') !== zhHeads.join('\n')) {
+      const n = Math.max(enHeads.length, zhHeads.length);
+      let i = 0;
+      while (i < n && enHeads[i] === zhHeads[i]) i++;
+      violation(
+        'mirror-structure',
+        zhRel,
+        `heading sequence differs at #${i + 1}: '${enHeads[i] ?? '(none)'}' vs '${zhHeads[i] ?? '(none)'}'`,
+      );
+    }
+
+    const enIds = collectTableIds(canonical);
+    const zhIds = collectTableIds(zhText);
+    if (enIds.join(',') !== zhIds.join(',')) {
+      const n = Math.max(enIds.length, zhIds.length);
+      let i = 0;
+      while (i < n && enIds[i] === zhIds[i]) i++;
+      violation(
+        'mirror-structure',
+        zhRel,
+        `Requirements table IDs differ at #${i + 1}: '${enIds[i] ?? '(none)'}' vs '${zhIds[i] ?? '(none)'}'`,
+      );
+    }
   }
 }
 

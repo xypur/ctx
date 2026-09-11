@@ -53,6 +53,45 @@ Canonical section order when several appear:
 Introducing a new value requires amending the type-outline spec first — do not
 invent values ad hoc.
 
+## Language contract
+
+Every checkpoint is a bilingual pair: the canon (`<base>.md`) is English
+only, the mirror (`<base>.zh.md`) is Chinese. The canon is what agents read;
+the mirror is a structural twin for human reading. `doctor.mjs` enforces the
+whole contract through the `canon-language`, `mirror-language`, and
+`mirror-structure` categories.
+
+Canon rules:
+
+1. The canon — front matter included — MUST hold zero CJK or fullwidth
+   characters outside code: U+2E80–2EFF, U+3000–303F, U+3040–U+30FF,
+   U+3400–U+4DBF, U+4E00–U+9FFF, U+F900–U+FAFF, U+FE30–U+FE4F,
+   U+FF00–U+FFEF.
+2. WHEN the session quotes Chinese source text, UI copy, or user wording,
+   the canon MUST carry it in an inline code span or a fenced block — never
+   as prose. The same exemption covers paths, commands, and literal strings.
+3. `next:` and every other natural-language front matter value is English,
+   like the rest of the canon.
+
+Mirror rules:
+
+4. After the same code exemption, CJK characters MUST make up at least 30%
+   of the mirror's letters: `CJK / (CJK + Latin letters)`. A mirror that
+   merely copies the canon fails this.
+5. The mirror MUST be a structural twin of the canon:
+   - front matter holds the same keys, and every value matches except
+     `next`, which is translated;
+   - the H1 title is the canon title plus the suffix `（中文镜像）`;
+   - the `##` and `###` heading sequence is identical — type sections and
+     sub-fields stay English verbatim;
+   - the Requirements table ID sequence is identical.
+6. Structural keywords — type-section names, sub-field names, status enum
+   values, front matter keys — are English in both files, never translated.
+
+Composing rule: write the canon in English first, then derive the mirror
+from the finished canon. Never draft in Chinese and translate only the
+headings — that is the fake-English failure this contract exists to prevent.
+
 ## Body skeleton
 
 The outline is the work-type taxonomy. The analytical questions — what was

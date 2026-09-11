@@ -41,8 +41,15 @@ Authoritative references (read on demand):
 3. **Honesty.** Requirement rows carry real statuses
    (`solved/partial/unresolved/deferred/rejected`); verification reports
    `passed/failed/Not run` only.
-4. English canon first; sync the Chinese mirror + `.i18n.yaml` before
-   declaring an operation done.
+4. **English-first writing discipline.** Compose the canon in English from
+   the start — never draft in Chinese and translate only the headings. The
+   canon (front matter and `next:` included) holds zero CJK/fullwidth
+   characters outside code spans; quote Chinese source text in backticks.
+   The Chinese mirror is derived from the finished canon and stays a
+   structural twin (front matter keys with `next` the only translated value,
+   H1 plus the `（中文镜像）` suffix, identical `##`/`###` heading sequence,
+   identical Requirements table IDs). Full rule text: `checkpoint-format.md`
+   → Language contract.
 5. Classification lives in the body's type sections; front-matter `tags` are
    derived from them (see `checkpoint-format.md`). Never create classification
    directories or extra indexes.
@@ -56,15 +63,19 @@ Authoritative references (read on demand):
    carries several type sections in ONE checkpoint.
 3. Name files per `file-naming.md`; if a name collides within the same
    minute, use the next `-NN` ordinal.
-4. Write canon per `checkpoint-format.md`; set
+4. Compose the canon in English per `checkpoint-format.md` (Language
+   contract included); set
    `created=updated=now`, `prev` = previous head path or null, `head: true`,
    `status: active`; then derive `tags` from the written type sections.
-5. Translate to `<base>.zh.md`, compute both blob hashes,
-   write `<base>.i18n.yaml`.
+5. Derive `<base>.zh.md` from the finished canon (structural twin), compute
+   both blob hashes, write `<base>.i18n.yaml`.
 6. Root index: add Records line + thread row (superseded old head loses its
    row), set this doc as the head.
 7. Only AFTER step 4–6 fully preserve the old record's still-valid facts,
    flip the previous head's `status` to `superseded`.
+8. Run `node scripts/doctor.mjs <ctx-root>` and fix every violation until it
+   reports `healthy` — a language or structure violation means the operation
+   is NOT done.
 
 If the current minute already holds this slug, prefer appending distinctive
 words over jumping to `-02` immediately.
@@ -86,8 +97,11 @@ Locate head via root index Active Threads (if missing → report, suggest
 3. Append one timestamped line to `Update Log`.
 4. Re-derive `tags` from the sections after merging; a tag may only be dropped
    when its section content is genuinely gone — prefer keeping history.
-5. Sync mirror + rewrite `.i18n.yaml` hashes; update the root index record
-   line if its digest changed.
+5. Sync mirror + rewrite `.i18n.yaml` hashes (mirror stays a structural
+   twin); update the root index record line if its digest changed.
+6. Run `node scripts/doctor.mjs <ctx-root>` and fix every violation until it
+   reports `healthy` — a language or structure violation means the operation
+   is NOT done.
 
 ## ctx-resume
 

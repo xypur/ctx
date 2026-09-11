@@ -1,3 +1,13 @@
+---
+created: 2026-08-25 09:02 +08:00
+updated: 2026-08-25 09:02 +08:00
+tags: [feature]
+status: active
+thread: csv-import
+prev: null
+head: true
+---
+
 # Context Checkpoint: CSV import chunked upload（中文镜像）
 
 > 本文件是 `2026-08-25-0902-csv-import-upload.md` 的中文镜像，内容与英文正典等价；
