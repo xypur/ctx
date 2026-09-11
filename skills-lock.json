@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "skills": {
+    "skill-forge": {
+      "source": "xypur/skills-4k",
+      "sourceType": "github",
+      "skillPath": "skills/skill-forge/SKILL.md",
+      "computedHash": "93a42389adb185eaccca7d2431ede60928a37a2c46b124720a337cca751ca643"
+    }
+  }
+}
