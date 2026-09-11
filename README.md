@@ -43,7 +43,7 @@ ctx is a plain Agent Skill — no runtime, no dependencies.
 
 | Host | How |
 |---|---|
-| Any Agent Skills host (Claude Code, pi, OpenCode, Codex, …) | put `skills/ctx/` into your host's skill discovery path, or read `skills/ctx/SKILL.md` directly |
+| Any Agent Skills host (Claude Code, pi, OpenCode, Codex, …) | `npx skills add https://github.com/xypur/ctx --skill ctx` |
 | pi | `pi install git:github.com/xypur/ctx` (or a local path) — adds the skill, the `/ctx*` commands, and a session-start cache hint |
 | OpenCode | copy `.opencode/command/ctx*.md` (5 files) into your project's `.opencode/command/` |
 | Codex | install this repo as a Codex plugin — adds skills, the five commands, and the session-start hook |
@@ -52,14 +52,6 @@ ctx is a plain Agent Skill — no runtime, no dependencies.
 
 Codex / Claude Code install rows above ship through the plugin manifests —
 see [docs/agent-portability.md](docs/agent-portability.md) for the full matrix.
-
-## Relationship to ponytail
-
-[ponytail](https://github.com/DietrichGebert/ponytail) is an always-on behavior
-mode for how an agent writes code. ctx is an on-demand memory operation for what
-the agent did. ctx borrows ponytail's adapter-portability layering (thin
-adapters, one canon) but depends on none of its files. They compose: ponytail
-shapes the writing; ctx remembers the work.
 
 ## Docs
 

@@ -41,7 +41,7 @@ ctx 是纯 Agent Skill——无运行时、零依赖。
 
 | 宿主 | 方式 |
 |---|---|
-| 任何支持 Agent Skills 的宿主（Claude Code、pi、OpenCode、Codex 等） | 把 `skills/ctx/` 放入宿主的技能发现路径，或直接读取 `skills/ctx/SKILL.md` |
+| 任何支持 Agent Skills 的宿主（Claude Code、pi、OpenCode、Codex 等） | `npx skills add https://github.com/xypur/ctx --skill ctx` |
 | pi | `pi install git:github.com/xypur/ctx`（或本地路径）——同时装入技能、`/ctx*` 命令与会话启动缓存提示 |
 | OpenCode | 把 `.opencode/command/ctx*.md`（5 文件）复制进项目的 `.opencode/command/` |
 | Codex | 以 Codex 插件安装本仓库——同时装入技能、五命令与会话启动 hook |
@@ -50,13 +50,6 @@ ctx 是纯 Agent Skill——无运行时、零依赖。
 
 上表 Codex / Claude Code 行通过插件清单分发——完整适配矩阵见
 [docs/agent-portability.md](docs/agent-portability.md)。
-
-## 与 ponytail 的关系
-
-[ponytail](https://github.com/DietrichGebert/ponytail) 是 always-on 的写代码行为模式；
-ctx 是按需的「做过什么」记忆操作。ctx 借鉴了 ponytail 的适配层分层
-（适配器保持薄、正典唯一），但不依赖其任何文件。两者互补：ponytail 塑造写的过程，
-ctx 记住做的结果。
 
 ## 文档
 
