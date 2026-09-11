@@ -29,9 +29,10 @@
 - [x] 8.5 仓库自持文件对齐 + 负例注入 + 正例回归
   - examples 两份镜像补 front matter 并核对标题后缀；`.agents/context` 镜像 H1 对齐；`--update-i18n` 刷新凭据；负例逐类注入（canon-language ×2、mirror-language ×2、mirror-structure ×2）；examples ×2 与 `.agents/context` 回归全绿
   - _Requirements: 3.5, 4.1, 4.2_
-- [ ] 8.6 Checkpoint — 全链走查
+- [x] 8.6 Checkpoint — 全链走查
   - 模拟 create → append：英文正典直接成文、镜像派生、doctor 收尾、凭据刷新；三处正例退出码 0；结果向用户汇报后再勾选
   - _Requirements: 3.1, 3.2, 4.3_
+  - 结果（2026-09-11）：注入 12/12；临时项目 create→append 走查通过（中文正文当场拦红、修正后两次 healthy）；examples ×2 + .agents/context 回归全绿；用户验收
 
 ## Notes
 

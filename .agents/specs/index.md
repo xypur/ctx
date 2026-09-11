@@ -4,9 +4,9 @@ Organized by functional module, each module is a self-contained directory (requi
 
 Read this file before any module document: use the Status Bar, Module Status Table, and Task Summary below to determine which module(s) and task(s) the current request touches, then open only the relevant module documents on demand.
 
-> 📍 **Status Bar** · 7 archived + 1 implemented [`bilingual-gate`] · 31/31 archived done · 5/6 current module · 0 blocked ·
-> Next task: bilingual-gate.8.6（全链走查已通过，待用户验收后勾选） · Next gate: bilingual-gate.8.6
-> Last updated: 2026-09-11（bilingual-gate 实施完成：canon-language / mirror-language / mirror-structure 三类门禁落地，注入 12/12，全链走查通过）
+> 📍 **Status Bar** · 全模块归档 [`archived`] · 37/37 done · 0 blocked ·
+> Next task: none（规格库收口，无待办） · Next gate: none remaining
+> Last updated: 2026-09-11（bilingual-gate 验收归档：canon-language / mirror-language / mirror-structure 三类语言门禁全面生效）
 
 ## Module Status Table
 
@@ -19,7 +19,7 @@ Read this file before any module document: use the Status Bar, Module Status Tab
 | extension-pi-opencode | archived | 5/5 (100%) | distribution | P1 完成：pi 包（@xypur/ctx）与扩展 + OpenCode 零 JS 命令 |
 | plugin-claude-codex | archived | 4/4 (100%) | distribution, extension-pi-opencode | P2 完成：插件清单（Codex 先）+ SessionStart hook + 五命令 |
 | type-outline | archived | 5/5 (100%) | - | 格式反转完成：类型节大纲 + tags 推导 + doctor 单骨架 + 存量改写 |
-| bilingual-gate | implemented | 5/6 (83%) | - | 双语语言门禁：canon 零 CJK + 镜像结构孪生 + SKILL 成文纪律；8.6 走查已过待验收 |
+| bilingual-gate | archived | 6/6 (100%) | - | 语言门禁完成：canon 零 CJK + 镜像结构孪生 + SKILL 成文纪律与 doctor 收尾 |
 
 `Progress` = `done/total (pct)` counting every task checkbox in `<module>/tasks.md`. Status values: `draft` → `design` → `implementing` → `implemented` → `archived`. Archived modules stay listed with status `archived`; their directories are not moved.
 
@@ -65,7 +65,7 @@ Global index of every task across modules. Add one row per task in `<module>/tas
 | bilingual-gate.8.3 | [x] | bilingual-gate | doctor 三类新规则 | bilingual-gate.8.2 |
 | bilingual-gate.8.4 | [x] | bilingual-gate | SKILL.md 成文纪律与验收环 | bilingual-gate.8.1 |
 | bilingual-gate.8.5 | [x] | bilingual-gate | 仓库自持文件对齐 + 注入回归 | bilingual-gate.8.3, bilingual-gate.8.4 |
-| bilingual-gate.8.6 | [ ] | bilingual-gate | Checkpoint — 全链走查 | bilingual-gate.8.5 |
+| bilingual-gate.8.6 | [x] | bilingual-gate | Checkpoint — 全链走查 | bilingual-gate.8.5 |
 
 `Task` is the globally unique id `<module>.<N.M>` (the module dir name + the task's number in `tasks.md`). `Status` mirrors the `- [ ]` / `- [x]` checkbox in `tasks.md`.
 
@@ -108,3 +108,4 @@ bilingual-gate (语言门禁：8.1 契约冻结 → 8.2/8.4 并行 → 8.3 → 8
 | 2026-08-27 | 用户新决议：检查点正文大纲从分析方法骨架（Problem/Requirements/Decision/Consequences/Verification）改为类型骨架（architecture/process/feature/simplification/bug-fix/testing），方法降级为节内子字段；tags 真源反转（节→tags）；doctor 单骨架不兼容旧版、存量完全改写；定序 Architecture→Process→Feature→Simplification→Bug-fix→Testing、空节省略。新立 type-outline 模块（5 任务），规格已创建，待用户「开始」指令后实施 |
 | 2026-08-27 | type-outline 实施完成：契约文档/SKILL/doctor/存量改写四步落地，注入测试与回归全绿，create→append→resume 走查通过（含 tags-section-mismatch 守门验证），内容保全 12 项抽查零丢失；用户验收后模块归档，新格式契约全面生效 |
 | 2026-09-11 | 立 bilingual-gate 模块（6 任务）：canon 严格零 CJK（代码豁免）、镜像结构孪生四维对齐、doctor 三类新规则、SKILL English-first 成文纪律 + doctor 收尾；用户四项决议入册，astro-minima 既有文件不重写，用户指令「go」直接实施 |
+| 2026-09-11 | bilingual-gate 实施完成并验收归档：doctor 三类门禁 + SKILL 成文纪律 + 契约/镜像同步 + 仓库自持文件对齐；注入 12/12、全链走查通过、四目录回归全绿；语言契约全面生效（astro-minima 存量文件保持预期变红，不追溯改写） |
