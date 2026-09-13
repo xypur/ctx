@@ -8,7 +8,7 @@ the i18n yaml hashes were computed from these very files via
 
 | Directory | Shows |
 |---|---|
-| `empty-skeleton/` | what `init.mjs` scaffolds: root index + empty archive |
+| `empty-skeleton/` | what `init.mjs` scaffolds: root index + empty archive + cache config (`config.yaml`) |
 | `login-redesign/` | full triplet (en + zh mirror + real-hash i18n.yaml), mixed type sections (`feature` + `bug-fix`, tags derived), append already merged, Update Log trail, and an archive/index.md with a superseded-entry line |
 | `csv-import/` | minimal single-section feature checkpoint, verification honestly `Not run` |
 

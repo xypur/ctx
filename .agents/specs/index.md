@@ -4,9 +4,9 @@ Organized by functional module, each module is a self-contained directory (requi
 
 Read this file before any module document: use the Status Bar, Module Status Table, and Task Summary below to determine which module(s) and task(s) the current request touches, then open only the relevant module documents on demand.
 
-> 📍 **Status Bar** · 全模块归档 [`archived`] · 37/37 done · 0 blocked ·
-> Next task: none（规格库收口，无待办） · Next gate: none remaining
-> Last updated: 2026-09-11（bilingual-gate 验收归档：canon-language / mirror-language / mirror-structure 三类语言门禁全面生效）
+> 📍 **Status Bar** · 8 archived + 1 implemented [`size-rollover`] · 37/37 archived done · 5/6 current module · 0 blocked ·
+> Next task: size-rollover.9.6（全链走查已通过，待用户验收后勾选） · Next gate: size-rollover.9.6
+> Last updated: 2026-09-11（size-rollover 实施完成：canon 字节预算 + 自动滚动分段 + checkpoint-size/config-invalid 门禁）
 
 ## Module Status Table
 
@@ -20,6 +20,7 @@ Read this file before any module document: use the Status Bar, Module Status Tab
 | plugin-claude-codex | archived | 4/4 (100%) | distribution, extension-pi-opencode | P2 完成：插件清单（Codex 先）+ SessionStart hook + 五命令 |
 | type-outline | archived | 5/5 (100%) | - | 格式反转完成：类型节大纲 + tags 推导 + doctor 单骨架 + 存量改写 |
 | bilingual-gate | archived | 6/6 (100%) | - | 语言门禁完成：canon 零 CJK + 镜像结构孪生 + SKILL 成文纪律与 doctor 收尾 |
+| size-rollover | implemented | 5/6 (83%) | - | 尺寸预算与滚动：active canon ≤ 24 KiB，超预算自动分段；9.6 走查已过待验收 |
 
 `Progress` = `done/total (pct)` counting every task checkbox in `<module>/tasks.md`. Status values: `draft` → `design` → `implementing` → `implemented` → `archived`. Archived modules stay listed with status `archived`; their directories are not moved.
 
@@ -66,6 +67,12 @@ Global index of every task across modules. Add one row per task in `<module>/tas
 | bilingual-gate.8.4 | [x] | bilingual-gate | SKILL.md 成文纪律与验收环 | bilingual-gate.8.1 |
 | bilingual-gate.8.5 | [x] | bilingual-gate | 仓库自持文件对齐 + 注入回归 | bilingual-gate.8.3, bilingual-gate.8.4 |
 | bilingual-gate.8.6 | [x] | bilingual-gate | Checkpoint — 全链走查 | bilingual-gate.8.5 |
+| size-rollover.9.1 | [x] | size-rollover | 尺寸与滚动契约文档冻结 | - |
+| size-rollover.9.2 | [x] | size-rollover | lib.mjs 预算常量 | - |
+| size-rollover.9.3 | [x] | size-rollover | doctor 尺寸与配置校验 | size-rollover.9.2, size-rollover.9.1 |
+| size-rollover.9.4 | [x] | size-rollover | init 脚手架与示例 | size-rollover.9.1 |
+| size-rollover.9.5 | [x] | size-rollover | 注入回归 + 滚动走查 | size-rollover.9.3, size-rollover.9.4 |
+| size-rollover.9.6 | [ ] | size-rollover | Checkpoint — 全链走查 | size-rollover.9.5 |
 
 `Task` is the globally unique id `<module>.<N.M>` (the module dir name + the task's number in `tasks.md`). `Status` mirrors the `- [ ]` / `- [x]` checkbox in `tasks.md`.
 
@@ -89,6 +96,8 @@ distribution (P0 正典先行：4.1→4.2→4.3→4.4)
 type-outline (格式反转：7.1 契约冻结 → 7.2/7.3 并行 → 7.4 存量改写 → 7.5)
 
 bilingual-gate (语言门禁：8.1 契约冻结 → 8.2/8.4 并行 → 8.3 → 8.5 对齐与注入 → 8.6)
+
+size-rollover (尺寸滚动：9.1/9.2 冻结与常量 → 9.3/9.4 并行 → 9.5 注入与滚动走查 → 9.6)
 ```
 
 前期三模块以 Hybrid 策略完成（契约 Foundation-First + 双 Feature-Slice）。适配层三模块：distribution Foundation-First 冻结正典；extension-pi-opencode（pi 优先）先行，plugin-claude-codex 串其后（宿主顺序 Codex 先、Claude 后）；矩阵↔实物一致性由各模块 checkpoint 走查对账。type-outline 同为 Foundation-First：契约文档冻结后，SKILL 联动与 doctor 改写并行，存量改写串后，全链走查收口。
@@ -109,3 +118,4 @@ bilingual-gate (语言门禁：8.1 契约冻结 → 8.2/8.4 并行 → 8.3 → 8
 | 2026-08-27 | type-outline 实施完成：契约文档/SKILL/doctor/存量改写四步落地，注入测试与回归全绿，create→append→resume 走查通过（含 tags-section-mismatch 守门验证），内容保全 12 项抽查零丢失；用户验收后模块归档，新格式契约全面生效 |
 | 2026-09-11 | 立 bilingual-gate 模块（6 任务）：canon 严格零 CJK（代码豁免）、镜像结构孪生四维对齐、doctor 三类新规则、SKILL English-first 成文纪律 + doctor 收尾；用户四项决议入册，astro-minima 既有文件不重写，用户指令「go」直接实施 |
 | 2026-09-11 | bilingual-gate 实施完成并验收归档：doctor 三类门禁 + SKILL 成文纪律 + 契约/镜像同步 + 仓库自持文件对齐；注入 12/12、全链走查通过、四目录回归全绿；语言契约全面生效（astro-minima 存量文件保持预期变红，不追溯改写） |
+| 2026-09-11 | 立 size-rollover 模块（6 任务）：active canon 字节预算（config.yaml，默认 24 KiB，0 关闭）+ 超预算自动滚动分段（同 thread/slug、prev 链、段只记增量）+ doctor `checkpoint-size`/`config-invalid`；用户四项决议入册，指令「开始执行」直接实施 |

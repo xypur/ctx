@@ -9,7 +9,7 @@ description: >-
 # ctx — 会话上下文压缩与缓存
 
 把冗长的会话工作压缩成简短的决策检查点，让未来的任何 Agent 无需回放历史即可继续工作。
-一次压缩 = 一个会话检查点的三件套写入：英文正典 + 中文镜像 + 凭据。
+一次压缩 = 一个检查点的三件套写入：英文正典 + 中文镜像 + 凭据。active 正典达到尺寸预算时，线程滚动为链式的下一段，而不是持续增长。
 
 权威参考文档（按需阅读，中文镜像）：
 
@@ -41,6 +41,9 @@ description: >-
 4. **英文优先成文纪律。** 正典从头就以英文直接成文——禁止先写中文草稿、只翻译标题。正典（含 front matter 与 `next:`）在代码区之外零 CJK 与全角字符；中文原文用反引号承载。中文镜像由成品正典派生，保持结构孪生（front matter 键一致且仅 `next` 为译文、H1 附 `（中文镜像）` 后缀、`##`/`###` 标题序列一致、需求表 ID 序列一致）。规则全文：`checkpoint-format.md` → 语言契约。
 5. 分类以正文类型节为真源，front matter 的 `tags` 由其推导（见 `checkpoint-format.md`）；
    仍不创建分类子目录或额外索引。
+6. **有预算的 head。** active 正典不超 `canon_max_bytes`（`<ctx-root>/config.yaml`，默认 24576；`0` 关闭）。
+   超预算时线程 ROLLS OVER：后继段只记增量、`prev:` 指回旧段，仍有效的事实沿链可达——
+   滚动线程的 head 不自足。见 `checkpoint-format.md` → 尺寸预算与滚动。
 
 ## ctx-create
 
@@ -49,7 +52,8 @@ description: >-
 3. 按 `file-naming.md` 命名；同分钟冲突时使用下一个 `-NN` 序号。
 4. 按 `checkpoint-format.md` 以英文直接成文正典（含语言契约）；设 `created=updated=now`、
    `prev` = 上一 head 路径或 null、`head: true`、`status: active`；
-   写完后从类型节推导 `tags`。
+   写完后从类型节推导 `tags`。正典须落在 `canon_max_bytes` 预算内（`<ctx-root>/config.yaml`）：
+   优先缩紧摘要；单次压缩确实无法容纳时拆分为链式段。
 5. 由成品正典派生 `<base>.zh.md`（结构孪生），计算双侧 blob hash，写 `<base>.i18n.yaml`。
 6. 根索引：追加 Records 行 + 线程行（被取代的旧 head 移除其行），把本文档置为 head。
 7. 只有在第 4–6 步完整承接旧记录的仍然有效的事实之后，才把前一 head 的 `status` 改为 `superseded`。
@@ -65,6 +69,9 @@ description: >-
 
 通过根索引 Active Threads 定位 head（找不到则报告并建议运行 `ctx`；不得擅自新建）。
 
+先做预算检查：读 `<ctx-root>/config.yaml` 的 `canon_max_bytes`（默认 24576；`0` 关闭）。
+若合并会使正典超预算，走下方的「滚动」而不是步骤 1–6。
+
 1. 保持文件名、`created`、`thread` 不变；刷新 `updated`。
 2. 对实际存在的类型节与子字段做结构化增量合并（增量属于尚未出现的类型时可新增该类型节）：
    新事实就地整合、状态带证据推进；绝不在文末粘贴第二份完整摘要。
@@ -72,6 +79,14 @@ description: >-
 4. 合并后从类型节重新推导 `tags`；只有当某类型节内容真正消失时才允许减去对应标签——优先保留历史。
 5. 同步镜像 + 重写 `.i18n.yaml` hash（镜像保持结构孪生）；摘要变化时更新根索引 Records 行。
 6. 运行 `node scripts/doctor.mjs <ctx-root>`，修至 `healthy` 为止——语言或结构违例等同操作未完成。
+
+### 滚动（正典超预算）
+
+1. 创建下一段三件套：同 `thread` 与 slug、新时间戳文件名、`prev` = 被继续的段、
+   `head: true`、`status: active`、`created=updated=now`。
+2. 正文只写本次增量（类型节 + Update Log）。不向前复制仍有效的事实——它们沿 `prev:` 可达。
+3. 根索引：追加新段 Records 行、移动 Active Threads 行；把旧段改为 `status: superseded` 并移除其 Records 行。
+4. 由成品正典派生镜像、写 `.i18n.yaml`，再运行 doctor 至 healthy。
 
 ## ctx-resume
 
@@ -84,6 +99,9 @@ description: >-
 | L3 | `prev:` 祖先链和/或 `archive/index.md` | 仅当 L2 缺事实或需追溯演变 |
 
 默认不读镜像。结束时报告：恢复到的位置、活动线程状态、以及 `next:` 行动项。
+
+若 head 线程存在 `prev:` 段，当 L2 缺少仍有效的事实时，L3 视为必读——滚动后的
+head 只含最新一段。
 
 若项目同时存在 `.agents/specs/index.md`，在读完根上下文索引后紧接着读它。
 权威分工：`.agents/specs/` 是模块/任务状态的唯一真源（状态栏、下一任务、

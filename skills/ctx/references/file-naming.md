@@ -33,7 +33,7 @@ Slug rules:
 
 - lowercase kebab-case only (`[a-z0-9-]`);
 - names the theme of the compression, readable at a glance;
-- stable afterwards — renaming breaks prev links and index rows, so it MUST NOT happen.
+- stable afterwards — renaming breaks prev links and index rows, so it MUST NOT happen. A rolled-over thread keeps the same slug across its segments; only the timestamp prefix (or the `-NN` ordinal) distinguishes them (see `checkpoint-format.md` → Size budget and rollover).
 
 ## Bilingual triplet
 

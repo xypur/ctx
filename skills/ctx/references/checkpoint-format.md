@@ -92,6 +92,30 @@ Composing rule: write the canon in English first, then derive the mirror
 from the finished canon. Never draft in Chinese and translate only the
 headings — that is the fake-English failure this contract exists to prevent.
 
+## Size budget and rollover
+
+An ACTIVE canon MUST stay within `canon_max_bytes` from
+`<ctx-root>/config.yaml` (default 24576 = 24 KiB; `0` disables the check).
+`doctor.mjs` enforces this on active records only — superseded and archived
+segments are history and may be larger (`checkpoint-size`). Only the canon
+is measured; mirrors and `.i18n.yaml` sit outside the AI read path.
+
+When a merge would push an active canon past the budget, the thread rolls
+over instead of growing:
+
+1. Start the next segment: same `thread` and slug, fresh timestamp filename,
+   `prev` pointing at the segment it continues, `head: true`,
+   `status: active`, `created=updated=now`.
+2. Write ONLY the new increment — type sections and Update Log. Do not copy
+   still-valid facts forward; they stay reachable through the `prev:` chain.
+   This is the one deliberate exception to the supersede-and-carry rule.
+3. Mark the previous segment `superseded`, drop its root-index Records
+   line, and move the Active Threads row to the new segment.
+
+Rolled-over heads are not self-contained: `ctx-resume` reads the newest
+segment first (L2) and follows `prev:` (L3) whenever earlier segments still
+hold facts the task needs.
+
 ## Body skeleton
 
 The outline is the work-type taxonomy. The analytical questions — what was

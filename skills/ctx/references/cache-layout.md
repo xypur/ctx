@@ -9,6 +9,7 @@ Higher-level rationale lives in `docs/ctx-understanding.md` §4 and §6;
 ```text
 .agents/context/
 ├── index.md                        # root index — the single navigation entry
+├── config.yaml                     # optional cache config (canon_max_bytes)
 ├── YYYY-MM-DD-HHMM-<slug>.md       # session checkpoints, flat
 ├── YYYY-MM-DD-HHMM-<slug>.zh.md    # Chinese mirrors (companions)
 ├── YYYY-MM-DD-HHMM-<slug>.i18n.yaml
@@ -20,10 +21,19 @@ Higher-level rationale lives in `docs/ctx-understanding.md` §4 and §6;
 Rules:
 
 1. `archive/` is the only subdirectory that may exist under `.agents/context/`.
-2. At the root level only `index.md`, flat checkpoint triplets, and `archive/` are allowed.
+2. At the root level only `index.md`, `config.yaml`, flat checkpoint triplets, and `archive/` are allowed.
 3. Classification directories such as `feature/` or `bug-fix/` MUST NOT be created; classification is expressed through the body's type sections (front-matter `tags` are derived from them; see `checkpoint-format.md`).
 4. `.zh.md` and `.i18n.yaml` files are companions of their canon, never indexed as separate records.
-5. Storing one checkpoint per session keeps "what happened in this session" answerable from a single file; cross-session history for the same task travels along `prev:` links.
+5. Storing one checkpoint per session keeps "what happened in this session" answerable from a single file; cross-session history for the same task travels along `prev:` links, and a thread that hits its size budget rolls over into a chained next segment (see `checkpoint-format.md` → Size budget and rollover).
+
+## Cache config (`config.yaml`)
+
+Optional; `init.mjs` scaffolds it with the built-in defaults. Unknown keys
+are ignored, and a missing file or key falls back to the defaults.
+
+| Key | Default | Meaning |
+|---|---|---|
+| `canon_max_bytes` | `24576` | Active canon size budget in bytes; past it the thread rolls over into a new segment. `0` disables the check. |
 
 ## Root index (`index.md`)
 

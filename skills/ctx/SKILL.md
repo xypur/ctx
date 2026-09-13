@@ -11,8 +11,9 @@ description: >-
 # ctx — session context compression & cache
 
 Turn conversation-heavy work into short decision checkpoints that any future
-agent can read without replaying history. One compression = one session
-checkpoint file pair of edits: canon + mirror.
+agent can read without replaying history. One compression = one checkpoint
+file pair of edits: canon + mirror. A thread whose active canon reaches the
+size budget rolls over into a chained next segment instead of growing.
 
 Authoritative references (read on demand):
 
@@ -53,6 +54,12 @@ Authoritative references (read on demand):
 5. Classification lives in the body's type sections; front-matter `tags` are
    derived from them (see `checkpoint-format.md`). Never create classification
    directories or extra indexes.
+6. **Budgeted heads.** An active canon stays within `canon_max_bytes`
+   (`<ctx-root>/config.yaml`, default 24576; `0` disables). Past the budget
+   the thread ROLLS OVER: the successor records only the increment, `prev:`
+   links back, and still-valid facts stay reachable through the chain —
+   rolled threads are not self-contained. See `checkpoint-format.md` →
+   Size budget and rollover.
 
 ## ctx-create
 
@@ -66,7 +73,10 @@ Authoritative references (read on demand):
 4. Compose the canon in English per `checkpoint-format.md` (Language
    contract included); set
    `created=updated=now`, `prev` = previous head path or null, `head: true`,
-   `status: active`; then derive `tags` from the written type sections.
+   `status: active`; then derive `tags` from the written type sections. Keep
+   the canon within `canon_max_bytes` (`<ctx-root>/config.yaml`): tighten the
+   summary first; if one compression genuinely cannot fit, split it into
+   chained segments.
 5. Derive `<base>.zh.md` from the finished canon (structural twin), compute
    both blob hashes, write `<base>.i18n.yaml`.
 6. Root index: add Records line + thread row (superseded old head loses its
@@ -89,6 +99,10 @@ redefining requirements — see `checkpoint-format.md` → Spec-linked sessions.
 Locate head via root index Active Threads (if missing → report, suggest
 `ctx`; do not silently create).
 
+Budget check first: read `canon_max_bytes` from `<ctx-root>/config.yaml`
+(default 24576; `0` disables). If merging would push the canon past the
+budget, perform a ROLLOVER (below) instead of steps 1–6.
+
 1. Keep filename, `created`, `thread` unchanged; refresh `updated`.
 2. Merge increments structurally into the type sections and sub-fields that
    actually exist (a new type section may be added when the increment belongs
@@ -103,6 +117,18 @@ Locate head via root index Active Threads (if missing → report, suggest
    reports `healthy` — a language or structure violation means the operation
    is NOT done.
 
+### Rollover (canon over budget)
+
+1. Create the next segment triplet: same `thread` and slug, new timestamp
+   filename, `prev` = the segment being continued, `head: true`,
+   `status: active`, `created=updated=now`.
+2. Body = the new increment only (type sections + Update Log). Do NOT copy
+   still-valid facts forward — they remain reachable through `prev:`.
+3. Root index: add the new Records line, move the Active Threads row; flip
+   the previous segment to `status: superseded` and drop its Records line.
+4. Derive the mirror from the finished canon, write `.i18n.yaml`, then run
+   doctor to healthy.
+
 ## ctx-resume
 
 Progressive disclosure — read as little as possible:
@@ -115,6 +141,10 @@ Progressive disclosure — read as little as possible:
 
 Mirrors are NOT read by default. Finish by reporting: restored position,
 active thread state, and the `next:` action line.
+
+If the head thread has `prev:` segments, treat L3 as required reading
+whenever L2 lacks a still-valid fact — rolled-over heads only carry their
+latest segment.
 
 If the project also has `.agents/specs/index.md`, read it right after the
 root context index. Division of authority: `.agents/specs/` is the single

@@ -24,6 +24,9 @@ import {
   collectTableIds,
   MIRROR_CJK_MIN_RATIO,
   MIRROR_TITLE_SUFFIX,
+  DEFAULT_CANON_MAX_BYTES,
+  CONFIG_FILE,
+  canonBytes,
 } from './lib.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -57,6 +60,25 @@ if (!isDir(join(ctxRoot, 'archive')))
 else if (!isFile(join(ctxRoot, 'archive', 'index.md')))
   violation('structure', rel(join(ctxRoot, 'archive')), 'missing archive/index.md');
 
+// ---- Cache config (size-rollover spec) ----
+let canonMaxBytes = DEFAULT_CANON_MAX_BYTES;
+const configPath = join(ctxRoot, CONFIG_FILE);
+const configText = readIfFile(configPath);
+if (configText !== null) {
+  const cfg = parseSimpleYaml(configText);
+  if ('canon_max_bytes' in cfg) {
+    const raw = cfg.canon_max_bytes;
+    const n = Number(raw);
+    if (raw === null || raw === '' || !Number.isInteger(n) || n < 0)
+      violation(
+        'config-invalid',
+        rel(configPath),
+        `canon_max_bytes '${raw}' is not a non-negative integer`,
+      );
+    else canonMaxBytes = n;
+  }
+}
+
 let bases = [];
 for (const entry of readdirSync(ctxRoot)) {
   const p = join(ctxRoot, entry);
@@ -68,6 +90,7 @@ for (const entry of readdirSync(ctxRoot)) {
   if (!entry.endsWith('.md')) {
     const dot = entry.indexOf('.i18n.yaml');
     if (dot > -1) continue;
+    if (entry === CONFIG_FILE) continue;
     notes.push(`ignored: ${rel(p)} (not part of any triplet)`);
     continue;
   }
@@ -226,6 +249,17 @@ for (const base of bases) {
         `Requirements table IDs differ at #${i + 1}: '${enIds[i] ?? '(none)'}' vs '${zhIds[i] ?? '(none)'}'`,
       );
     }
+  }
+
+  // ---- Size budget (size-rollover spec) ----
+  if (canonMaxBytes > 0 && d.status === 'active') {
+    const bytes = canonBytes(canonical);
+    if (bytes > canonMaxBytes)
+      violation(
+        'checkpoint-size',
+        canonRel,
+        `active canon is ${bytes} bytes > budget ${canonMaxBytes} (config.yaml canon_max_bytes) — roll over to a new segment`,
+      );
   }
 }
 

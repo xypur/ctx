@@ -81,6 +81,25 @@ next: wire refresh redirect    # 可选，一行的下一步行动
 成文纪律：先直接以英文写成正典，再由成品正典派生镜像。禁止先写中文草稿、
 只翻译标题——那正是本契约要消灭的「假英文」。
 
+## 尺寸预算与滚动
+
+ACTIVE 正典的字节数 MUST ≤ `<ctx-root>/config.yaml` 中的 `canon_max_bytes`
+（默认 24576 = 24 KiB；`0` 关闭检查）。`doctor.mjs` 只对 active 记录强制该
+不变量——`superseded` / `archived` 段属于历史，允许更大（`checkpoint-size`）。
+只计量正典；镜像与 `.i18n.yaml` 不在 AI 读取路径上。
+
+WHEN 合并增量会使 active 正典超过预算，THEN 线程滚动而非增长：
+
+1. 开启下一段：同 `thread` 与 slug、新时间戳文件名、`prev` 指向被继续的段、
+   `head: true`、`status: active`、`created=updated=now`。
+2. 只写本次增量（类型节 + Update Log）。不向前复制仍有效的事实——它们沿
+   `prev:` 链可达。这是「取代并承接」规则的唯一显式例外。
+3. 把旧段标为 `superseded`、移除其根索引 Records 行，Active Threads 行
+   迁移到新段。
+
+滚动后的 head 不自足：`ctx-resume` 先读最新段（L2），当更早的段仍持有任务
+需要的事实时沿 `prev:`（L3）追溯。
+
 ## 正文骨架
 
 大纲即工作类型分类法。分析性问题——需要什么、决策了什么、带来什么、

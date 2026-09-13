@@ -261,3 +261,16 @@ export function collectTableIds(text) {
 
 /** Exact H1 suffix every Chinese mirror carries. */
 export const MIRROR_TITLE_SUFFIX = '\uFF08\u4E2D\u6587\u955C\u50CF\uFF09';
+
+// ---- Size budget (size-rollover; see checkpoint-format.md) ----
+
+/** Built-in active-canon budget in bytes (24 KiB) — `canon_max_bytes` default. */
+export const DEFAULT_CANON_MAX_BYTES = 24 * 1024;
+
+/** Name of the optional cache config file at the context root. */
+export const CONFIG_FILE = 'config.yaml';
+
+/** UTF-8 byte length of a checkpoint canon. */
+export function canonBytes(text) {
+  return Buffer.byteLength(String(text), 'utf8');
+}

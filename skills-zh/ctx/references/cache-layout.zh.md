@@ -8,6 +8,7 @@
 ```text
 .agents/context/
 ├── index.md                        # 根索引 — 唯一常规导航入口
+├── config.yaml                     # 可选缓存配置（canon_max_bytes）
 ├── YYYY-MM-DD-HHMM-<slug>.md       # 会话检查点，平铺
 ├── YYYY-MM-DD-HHMM-<slug>.zh.md    # 中文镜像（伴生文件）
 ├── YYYY-MM-DD-HHMM-<slug>.i18n.yaml
@@ -19,10 +20,18 @@
 规则：
 
 1. `archive/` 是 `.agents/context/` 下唯一允许存在的子目录。
-2. 根层级只允许 `index.md`、平铺的检查点三件套和 `archive/`。
+2. 根层级只允许 `index.md`、`config.yaml`、平铺的检查点三件套和 `archive/`。
 3. 禁止创建 `feature/`、`bug-fix/` 之类的分类目录；分类通过正文的类型节表达（front matter 的 `tags` 由类型节推导；见 `checkpoint-format.md`）。
 4. `.zh.md` 与 `.i18n.yaml` 是正典的伴生文件，绝不作为独立记录进入任何索引。
-5. 每个会话一份检查点，使“这次会话发生了什么”从单个文件即可回答；同一任务跨会话的历史沿 `prev:` 链传递。
+5. 每个会话一份检查点，使“这次会话发生了什么”从单个文件即可回答；同一任务跨会话的历史沿 `prev:` 链传递，线程达到尺寸预算时滚动为链式的下一段（见 `checkpoint-format.md` → 尺寸预算与滚动）。
+
+## 缓存配置（`config.yaml`）
+
+可选；`init.mjs` 会以内置默认值生成脚手架。未知键忽略，文件或键缺失时回落默认值。
+
+| 键 | 默认 | 含义 |
+|---|---|---|
+| `canon_max_bytes` | `24576` | active 正典的字节预算；超过后线程滚动为新段。`0` 关闭检查。 |
 
 ## 根索引（index.md）
 

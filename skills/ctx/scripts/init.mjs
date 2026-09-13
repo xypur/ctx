@@ -42,6 +42,16 @@ const files = [
       '',
     ].join('\n'),
   },
+  {
+    path: 'config.yaml',
+    body: [
+      '# ctx cache configuration (optional; built-in defaults apply when absent).',
+      '# Active canon size budget in bytes; past it a thread rolls over into a new',
+      '# segment instead of growing. 0 disables the check.',
+      'canon_max_bytes: 24576',
+      '',
+    ].join('\n'),
+  },
 ];
 
 for (const f of files) {
